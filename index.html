@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bagor Asperda - Monitoring Bagi Order Rental Mobil</title>
+
+    <!-- Logo & Favicon Configuration -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -68,13 +72,12 @@
             <div class="flex items-center justify-between h-16">
                 <!-- Logo & App Title -->
                 <div class="flex items-center space-x-3">
-                    <div class="bg-gradient-to-tr from-emerald-400 via-teal-400 to-green-500 text-slate-950 p-2.5 rounded-2xl font-black text-xl shadow-lg shadow-emerald-500/20 flex items-center justify-center w-10 h-10 transform hover:rotate-6 transition-transform">
-                        <i class="fa-solid fa-car-side text-slate-900"></i>
-                    </div>
+                    <img src="logo.png" alt="Logo ASPERDA" class="w-10 h-10 object-contain rounded-2xl shadow-lg shadow-emerald-500/20 transform hover:scale-105 transition-transform bg-white/10 p-0.5 border border-emerald-400/30" 
+                         onerror="this.onerror=null; this.outerHTML='<div class=\'bg-gradient-to-tr from-emerald-400 via-teal-400 to-green-500 text-slate-950 p-2.5 rounded-2xl font-black text-xl shadow-lg shadow-emerald-500/20 flex items-center justify-center w-10 h-10 transform hover:rotate-6 transition-transform\'><i class=\'fa-solid fa-car-side text-slate-900\'></i></div>';">
                     <div>
                         <div class="flex items-center space-x-2">
                             <h1 class="font-extrabold text-lg sm:text-xl tracking-tight text-white">BAGOR ASPERDA</h1>
-                            <span class="bg-gradient-to-r from-emerald-400/30 to-teal-400/30 text-emerald-200 text-[10px] px-2 py-0.5 rounded-full border border-emerald-400/30 font-bold">v3.0 Light</span>
+                            <span class="bg-gradient-to-r from-emerald-400/30 to-teal-400/30 text-emerald-200 text-[10px] px-2 py-0.5 rounded-full border border-emerald-400/30 font-bold">v3.2</span>
                         </div>
                         <p class="text-[11px] text-emerald-200/80 hidden sm:block">Aplikasi Monitoring Bagi Order & Kas Organisasi Rental Mobil</p>
                     </div>
@@ -179,6 +182,7 @@
                         <option value="REGULAR">Regular (Rp 5.000/hr)</option>
                         <option value="MEDIUM">Medium / SUV (Rp 10.000/hr)</option>
                         <option value="LUXURY">Mewah / Luxury (Rp 50.000/hr)</option>
+                        <option value="CUSTOM">Isian / Custom Rate</option>
                     </select>
 
                     <button onclick="resetFilters()" title="Reset Filter" class="p-2.5 border border-slate-200 rounded-2xl hover:bg-slate-100 text-slate-600 transition-colors">
@@ -376,29 +380,19 @@
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                     <!-- Class 1: Regular -->
                     <div class="border border-emerald-200 bg-gradient-to-b from-emerald-50/50 to-white rounded-3xl p-5 relative overflow-hidden flex flex-col justify-between shadow-sm">
                         <div>
                             <div class="flex items-center justify-between mb-3">
-                                <span class="bg-emerald-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl uppercase shadow-sm">Kelas Standard / MPV</span>
+                                <span class="bg-emerald-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl uppercase shadow-sm">Kelas Standard</span>
                                 <i class="fa-solid fa-car text-emerald-600 text-xl"></i>
                             </div>
                             <div class="my-3">
                                 <span class="text-3xl font-black text-emerald-700">Rp 5.000</span>
-                                <span class="text-xs font-semibold text-slate-500">/ hari sewa</span>
+                                <span class="text-xs font-semibold text-slate-500">/ hari</span>
                             </div>
-                            <p class="text-xs text-slate-700 font-semibold mb-3">Contoh armada kendaraan:</p>
-                            <ul class="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
-                                <li>Toyota Avanza / Veloz</li>
-                                <li>Toyota Calya / Daihatsu Sigra</li>
-                                <li>Toyota Innova Reborn / Grand New</li>
-                                <li>Suzuki Ertiga / XL7</li>
-                                <li>Mitsubishi Xpander / Brio / Mobilio</li>
-                            </ul>
-                        </div>
-                        <div class="mt-4 pt-3 border-t border-emerald-200 text-[11px] text-emerald-800 font-semibold">
-                            Contoh: 3 hari Innova = Rp 15.000 Kas Bagor
+                            <p class="text-xs text-slate-600 space-y-1 list-disc list-inside">Avanza, Calya, Innova Reborn, Brio, Xpander, dll.</p>
                         </div>
                     </div>
 
@@ -406,24 +400,14 @@
                     <div class="border border-teal-200 bg-gradient-to-b from-teal-50/50 to-white rounded-3xl p-5 relative overflow-hidden flex flex-col justify-between shadow-sm">
                         <div>
                             <div class="flex items-center justify-between mb-3">
-                                <span class="bg-teal-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl uppercase shadow-sm">Medium / SUV / Microbus</span>
+                                <span class="bg-teal-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl uppercase shadow-sm">Medium / SUV</span>
                                 <i class="fa-solid fa-van-shuttle text-teal-600 text-xl"></i>
                             </div>
                             <div class="my-3">
                                 <span class="text-3xl font-black text-teal-700">Rp 10.000</span>
-                                <span class="text-xs font-semibold text-slate-500">/ hari sewa</span>
+                                <span class="text-xs font-semibold text-slate-500">/ hari</span>
                             </div>
-                            <p class="text-xs text-slate-700 font-semibold mb-3">Contoh armada kendaraan:</p>
-                            <ul class="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
-                                <li>Toyota Innova Zenix Q / V Hybrid</li>
-                                <li>Toyota Fortuner / VRZ / GR</li>
-                                <li>Mitsubishi Pajero Sport</li>
-                                <li>Toyota Hiace Premio / Commuter</li>
-                                <li>Isuzu Elf Long / Coaster</li>
-                            </ul>
-                        </div>
-                        <div class="mt-4 pt-3 border-t border-teal-200 text-[11px] text-teal-800 font-semibold">
-                            Contoh: 2 hari Fortuner = Rp 20.000 Kas Bagor
+                            <p class="text-xs text-slate-600 space-y-1 list-disc list-inside">Zenix Q, Fortuner, Pajero, Hiace Premio, dll.</p>
                         </div>
                     </div>
 
@@ -431,24 +415,29 @@
                     <div class="border border-purple-200 bg-gradient-to-b from-purple-50/50 to-white rounded-3xl p-5 relative overflow-hidden flex flex-col justify-between shadow-sm">
                         <div>
                             <div class="flex items-center justify-between mb-3">
-                                <span class="bg-purple-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl uppercase shadow-sm">Mewah / Luxury VIP</span>
+                                <span class="bg-purple-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl uppercase shadow-sm">Mewah / Luxury</span>
                                 <i class="fa-solid fa-gem text-purple-600 text-xl"></i>
                             </div>
                             <div class="my-3">
                                 <span class="text-3xl font-black text-purple-700">Rp 50.000</span>
-                                <span class="text-xs font-semibold text-slate-500">/ hari sewa</span>
+                                <span class="text-xs font-semibold text-slate-500">/ hari</span>
                             </div>
-                            <p class="text-xs text-slate-700 font-semibold mb-3">Contoh armada kendaraan:</p>
-                            <ul class="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
-                                <li>Toyota Alphard / Vellfire</li>
-                                <li>Toyota Camry / Accord</li>
-                                <li>Mercedes-Benz C/E/S Class</li>
-                                <li>BMW 3 / 5 / 7 Series</li>
-                                <li>Mobil Mewah / Premium lainnya</li>
-                            </ul>
+                            <p class="text-xs text-slate-600 space-y-1 list-disc list-inside">Alphard, Vellfire, Camry, Mercy, BMW, dll.</p>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-purple-200 text-[11px] text-purple-800 font-semibold">
-                            Contoh: 2 hari Alphard = Rp 100.000 Kas Bagor
+                    </div>
+
+                    <!-- Class 4: Isian Custom -->
+                    <div class="border border-blue-200 bg-gradient-to-b from-blue-50/50 to-white rounded-3xl p-5 relative overflow-hidden flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-blue-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl uppercase shadow-sm">Isian / Kustom</span>
+                                <i class="fa-solid fa-pen-to-square text-blue-600 text-xl"></i>
+                            </div>
+                            <div class="my-3">
+                                <span class="text-2xl font-black text-blue-700">Bebas / Custom</span>
+                                <span class="text-xs font-semibold text-slate-500">/ hari</span>
+                            </div>
+                            <p class="text-xs text-slate-600 space-y-1 list-disc list-inside">Nominal kesepakatan khusus yang diinput manual.</p>
                         </div>
                     </div>
                 </div>
@@ -564,11 +553,22 @@
 
                     <div>
                         <label class="block text-slate-700 text-xs mb-1 font-semibold">Kategori Tarif Bagi Order ASPERDA <span class="text-rose-500">*</span></label>
-                        <select id="input-car-category" required onchange="calculateFee()" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 font-medium text-xs sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <select id="input-car-category" required onchange="handleCategoryChange()" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 font-medium text-xs sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                             <option value="REGULAR">Regular (Avanza, Calya, Innova Reborn, dll) - Rp 5.000/hari</option>
                             <option value="MEDIUM">Medium / SUV / Microbus (Zenix Q, Fortuner, Pajero, Hiace Premio) - Rp 10.000/hari</option>
                             <option value="LUXURY">Luxury / Mewah (Alphard, Vellfire, Mercy, BMW) - Rp 50.000/hari</option>
+                            <option value="CUSTOM">Isian Manual (Ketik Nominal Bebas per Hari)</option>
                         </select>
+                    </div>
+
+                    <!-- Input Nominal Isian Custom (Muncul jika Kategori = CUSTOM) -->
+                    <div id="custom-rate-container" class="hidden bg-blue-50/80 p-3 rounded-xl border border-blue-200">
+                        <label class="block text-blue-900 text-xs mb-1 font-bold flex items-center space-x-1">
+                            <i class="fa-solid fa-coins text-blue-600"></i>
+                            <span>Masukkan Nominal Fee Kas per Hari (Rp) <span class="text-rose-500">*</span></span>
+                        </label>
+                        <input type="number" id="input-custom-rate" min="0" placeholder="misal: 15000 atau 25000" oninput="calculateFee()"
+                               class="w-full bg-white border border-blue-300 rounded-xl p-2.5 text-xs sm:text-sm font-bold text-blue-900 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
                 </div>
 
@@ -762,7 +762,7 @@
             onSnapshot 
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'bagor-asperda-default';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'bagor-asperda-app';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
             apiKey: "AIzaSyDemoKeyForBagorAsperdaApp12345",
             authDomain: "bagor-asperda.firebaseapp.com",
@@ -789,6 +789,8 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             initDates();
+            initMonthlyChart();
+            initKasChart();
             
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -809,31 +811,110 @@
                     updateOnlineBadge(false);
                 }
             });
-
-            initMonthlyChart();
-            initKasChart();
         });
 
         function updateOnlineBadge(isOnline) {
             const badge = document.getElementById('db-status-badge');
             const text = document.getElementById('db-status-text');
-            if (!badge || !text) return;
-            if (isOnline) {
-                badge.className = "flex items-center space-x-2 bg-emerald-900/60 text-emerald-200 px-3 py-1 rounded-full text-xs font-medium border border-emerald-500/30";
-                text.innerText = "Online Cloud";
-            } else {
-                badge.className = "flex items-center space-x-2 bg-rose-900/60 text-rose-200 px-3 py-1 rounded-full text-xs font-medium border border-rose-500/30";
-                text.innerText = "Mode Offline";
+            if (badge && text) {
+                if (isOnline) {
+                    badge.className = "flex items-center space-x-2 bg-emerald-900/60 text-emerald-200 px-3 py-1 rounded-full text-xs font-medium border border-emerald-500/30 shadow-inner";
+                    text.innerText = "Online Cloud";
+                } else {
+                    badge.className = "flex items-center space-x-2 bg-rose-900/60 text-rose-200 px-3 py-1 rounded-full text-xs font-medium border border-rose-500/30 shadow-inner";
+                    text.innerText = "Offline";
+                }
             }
         }
+
+        function setupFirestoreSubscriptions() {
+            const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'bagor_orders');
+            onSnapshot(ordersRef, (snapshot) => {
+                ordersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                ordersData.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+                renderOrdersTable();
+                renderKasDashboard();
+                renderMembersGrid();
+                updateLeaderboard();
+            }, (err) => {
+                console.error("Error listening to orders:", err);
+            });
+
+            const membersRef = collection(db, 'artifacts', appId, 'public', 'data', 'asperda_members');
+            onSnapshot(membersRef, (snapshot) => {
+                membersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                membersData.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+                renderMembersGrid();
+                populateRentalDropdowns();
+            }, (err) => {
+                console.error("Error listening to members:", err);
+            });
+        }
+
+        window.handleCategoryChange = function() {
+            const category = document.getElementById('input-car-category').value;
+            const customContainer = document.getElementById('custom-rate-container');
+
+            if (category === 'CUSTOM') {
+                customContainer.classList.remove('hidden');
+            } else {
+                customContainer.classList.add('hidden');
+            }
+
+            calculateFee();
+        };
+
+        window.autoDetectCategory = function() {
+            const carName = document.getElementById('input-car-name').value.toLowerCase();
+            const categorySelect = document.getElementById('input-car-category');
+
+            if (!carName || !categorySelect) return;
+            if (categorySelect.value === 'CUSTOM') return;
+
+            if (carName.includes('alphard') || carName.includes('vellfire') || carName.includes('mercy') || carName.includes('bmw') || carName.includes('camry') || carName.includes('mewah')) {
+                categorySelect.value = 'LUXURY';
+            } else if (carName.includes('zenix') || carName.includes('fortuner') || carName.includes('pajero') || carName.includes('hiace') || carName.includes('premio') || carName.includes('elf') || carName.includes('venturer')) {
+                categorySelect.value = 'MEDIUM';
+            } else {
+                categorySelect.value = 'REGULAR';
+            }
+
+            handleCategoryChange();
+        };
+
+        window.calculateFee = function() {
+            const category = document.getElementById('input-car-category').value;
+            const startDateVal = document.getElementById('input-start-date').value;
+            const endDateVal = document.getElementById('input-end-date').value;
+
+            let rate = RATE_REGULAR;
+            if (category === 'MEDIUM') rate = RATE_MEDIUM;
+            else if (category === 'LUXURY') rate = RATE_LUXURY;
+            else if (category === 'CUSTOM') {
+                rate = parseInt(document.getElementById('input-custom-rate').value) || 0;
+            }
+
+            let days = 1;
+            if (startDateVal && endDateVal) {
+                const d1 = new Date(startDateVal);
+                const d2 = new Date(endDateVal);
+                const diffTime = Math.abs(d2 - d1);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                days = Math.max(1, diffDays);
+            }
+
+            const total = days * rate;
+
+            document.getElementById('calculation-breakdown-text').innerText = `${days} Hari x ${formatRupiah(rate)} = ${formatRupiah(total)}`;
+            document.getElementById('calculation-total-amount').innerText = formatRupiah(total);
+        };
 
         window.handleProofImageUpload = function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-            if (file.size > 5 * 1024 * 1024) {
-                showToast("Ukuran foto maksimal 5MB!", "error");
-                event.target.value = "";
+            if (!file.type.startsWith('image/')) {
+                showToast("File harus berupa gambar (JPG, PNG)", "error");
                 return;
             }
 
@@ -842,16 +923,21 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 800;
+                    const MAX_HEIGHT = 800;
                     let width = img.width;
                     let height = img.height;
-                    const maxDim = 800;
 
-                    if (width > height && width > maxDim) {
-                        height = Math.round((height * maxDim) / width);
-                        width = maxDim;
-                    } else if (height > maxDim) {
-                        width = Math.round((width * maxDim) / height);
-                        height = maxDim;
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height = Math.round((height * MAX_WIDTH) / width);
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width = Math.round((width * MAX_HEIGHT) / height);
+                            height = MAX_HEIGHT;
+                        }
                     }
 
                     canvas.width = width;
@@ -861,8 +947,12 @@
 
                     uploadedProofBase64 = canvas.toDataURL('image/jpeg', 0.7);
 
-                    document.getElementById('proof-preview-img').src = uploadedProofBase64;
-                    document.getElementById('proof-preview-container').classList.remove('hidden');
+                    const previewImg = document.getElementById('proof-preview-img');
+                    const previewContainer = document.getElementById('proof-preview-container');
+                    if (previewImg && previewContainer) {
+                        previewImg.src = uploadedProofBase64;
+                        previewContainer.classList.remove('hidden');
+                    }
                 };
                 img.src = e.target.result;
             };
@@ -871,8 +961,8 @@
 
         window.clearProofImage = function() {
             uploadedProofBase64 = "";
-            const fileInput = document.getElementById('input-payment-proof');
-            if (fileInput) fileInput.value = "";
+            const input = document.getElementById('input-payment-proof');
+            if (input) input.value = "";
             const previewContainer = document.getElementById('proof-preview-container');
             if (previewContainer) previewContainer.classList.add('hidden');
         };
@@ -880,150 +970,382 @@
         window.viewPaymentProof = function(orderId) {
             const order = ordersData.find(o => o.id === orderId);
             if (!order || !order.paymentProof) {
-                showToast("Bukti pembayaran tidak ditemukan.", "error");
+                showToast("Bukti bayar tidak ditemukan.", "error");
                 return;
             }
 
-            document.getElementById('view-proof-image').src = order.paymentProof;
-            document.getElementById('view-proof-info').innerText = `Order ID: BAGOR-${order.id.substring(0,6).toUpperCase()} | ${order.carName} (${order.carPlate || '-'}) | ${order.rentalB}`;
+            const imgElem = document.getElementById('view-proof-image');
+            const infoElem = document.getElementById('view-proof-info');
+            if (imgElem) imgElem.src = order.paymentProof;
+            if (infoElem) infoElem.innerText = `Bukti Transfer: ${order.rentalB} (${order.carName})`;
+
             openModal('modal-view-proof');
         };
 
-        function setupFirestoreSubscriptions() {
-            if (!currentUser) return;
-
-            const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'bagor_orders');
-            onSnapshot(ordersRef, (snapshot) => {
-                ordersData = [];
-                snapshot.forEach(docSnap => {
-                    ordersData.push({ id: docSnap.id, ...docSnap.data() });
-                });
-
-                ordersData.sort((a, b) => new Date(b.createdAt || b.startDate) - new Date(a.createdAt || a.startDate));
-                
-                renderOrdersTable();
-                renderKasDashboard();
-                updateLeaderboard();
-            }, (error) => {
-                console.error("Orders sync error:", error);
-                showToast("Gagal menyelaraskan data order: " + error.message, "error");
-            });
-
-            const membersRef = collection(db, 'artifacts', appId, 'public', 'data', 'asperda_members');
-            onSnapshot(membersRef, (snapshot) => {
-                membersData = [];
-                snapshot.forEach(docSnap => {
-                    membersData.push({ id: docSnap.id, ...docSnap.data() });
-                });
-
-                if (membersData.length === 0) {
-                    initDefaultMembers();
-                } else {
-                    renderMembersGrid();
-                    populateRentalDropdowns();
-                }
-            }, (error) => {
-                console.error("Members sync error:", error);
-            });
-        }
-
-        async function initDefaultMembers() {
-            if (!currentUser) return;
-            const defaultList = [
-                { name: "Avanza Rent Surabaya", owner: "H. Bambang", phone: "081234567890", city: "Surabaya" },
-                { name: "Berkah Jaya Trans", owner: "Iwan Setiawan", phone: "081987654321", city: "Sidoarjo" },
-                { name: "Garuda Rentcar VIP", owner: "Rudi Hartono", phone: "081333444555", city: "Surabaya" },
-                { name: "Pelangi Rent Car", owner: "Hj. Ratna", phone: "085711223344", city: "Gresik" },
-                { name: "Mitra Mandiri Autorent", owner: "Denny", phone: "08122334455", city: "Malang" }
-            ];
-
-            const membersRef = collection(db, 'artifacts', appId, 'public', 'data', 'asperda_members');
-            for (const item of defaultList) {
-                await addDoc(membersRef, { ...item, createdAt: new Date().toISOString() });
-            }
-        }
-
-        window.seedSampleData = async function() {
+        window.handleSaveOrder = async function(e) {
+            e.preventDefault();
             if (!currentUser) {
-                showToast("Sistem belum siap. Coba lagi.", "error");
+                showToast("Pengguna belum terverifikasi cloud.", "error");
                 return;
             }
 
-            const currentYear = new Date().getFullYear();
-            const sampleOrders = [
-                {
-                    rentalA: "Avanza Rent Surabaya",
-                    rentalB: "Berkah Jaya Trans",
-                    carName: "Toyota Innova Reborn",
-                    carPlate: "L 1829 BC",
-                    category: "REGULAR",
-                    startDate: `${currentYear}-01-10`,
-                    endDate: `${currentYear}-01-12`,
-                    days: 3,
-                    ratePerDay: 5000,
-                    totalFee: 15000,
-                    paymentStatus: "LUNAS",
-                    paymentProof: "",
-                    notes: "Lepas Kunci",
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    rentalA: "Garuda Rentcar VIP",
-                    rentalB: "Pelangi Rent Car",
-                    carName: "Innova Zenix Q Hybrid",
-                    carPlate: "W 1092 XX",
-                    category: "MEDIUM",
-                    startDate: `${currentYear}-02-05`,
-                    endDate: `${currentYear}-02-08`,
-                    days: 4,
-                    ratePerDay: 10000,
-                    totalFee: 40000,
-                    paymentStatus: "LUNAS",
-                    paymentProof: "",
-                    notes: "Unit Baru Zenix Q",
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    rentalA: "Mitra Mandiri Autorent",
-                    rentalB: "Garuda Rentcar VIP",
-                    carName: "Toyota Alphard HEV",
-                    carPlate: "L 1 VIP",
-                    category: "LUXURY",
-                    startDate: `${currentYear}-02-20`,
-                    endDate: `${currentYear}-02-23`,
-                    days: 4,
-                    ratePerDay: 50000,
-                    totalFee: 200000,
-                    paymentStatus: "PENDING",
-                    paymentProof: "",
-                    notes: "Tamu VVIP Pemprov",
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    rentalA: "Avanza Rent Surabaya",
-                    rentalB: "Garuda Rentcar VIP",
-                    carName: "Toyota Fortuner GR",
-                    carPlate: "L 888 GR",
-                    category: "MEDIUM",
-                    startDate: `${currentYear}-03-01`,
-                    endDate: `${currentYear}-03-03`,
-                    days: 3,
-                    ratePerDay: 10000,
-                    totalFee: 30000,
-                    paymentStatus: "LUNAS",
-                    paymentProof: "",
-                    notes: "Perjalanan Luar Kota",
-                    createdAt: new Date().toISOString()
-                }
-            ];
+            const rentalA = document.getElementById('input-rental-a').value;
+            const rentalB = document.getElementById('input-rental-b').value;
+            const carName = document.getElementById('input-car-name').value.trim();
+            const carPlate = document.getElementById('input-car-plate').value.trim();
+            const category = document.getElementById('input-car-category').value;
+            const startDate = document.getElementById('input-start-date').value;
+            const endDate = document.getElementById('input-end-date').value;
+            const paymentStatus = document.getElementById('input-payment-status').value;
+            const notes = document.getElementById('input-notes').value.trim();
 
-            const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'bagor_orders');
-            for (const order of sampleOrders) {
-                await addDoc(ordersRef, order);
+            if (rentalA === rentalB) {
+                showToast("Pemilik Order dan Penerima Order tidak boleh sama!", "error");
+                return;
             }
 
-            showToast("Contoh data demo bulanan berhasil dimasukkan!", "success");
+            let ratePerDay = RATE_REGULAR;
+            if (category === 'MEDIUM') ratePerDay = RATE_MEDIUM;
+            else if (category === 'LUXURY') ratePerDay = RATE_LUXURY;
+            else if (category === 'CUSTOM') {
+                ratePerDay = parseInt(document.getElementById('input-custom-rate').value) || 0;
+                if (ratePerDay <= 0) {
+                    showToast("Masukkan nominal tarif per hari yang valid!", "error");
+                    return;
+                }
+            }
+
+            const d1 = new Date(startDate);
+            const d2 = new Date(endDate);
+            const days = Math.max(1, Math.ceil(Math.abs(d2 - d1) / (1000 * 60 * 60 * 24)) + 1);
+            const totalFee = days * ratePerDay;
+
+            const newOrder = {
+                rentalA,
+                rentalB,
+                carName,
+                carPlate,
+                category,
+                startDate,
+                endDate,
+                days,
+                ratePerDay,
+                totalFee,
+                paymentStatus,
+                paymentProof: uploadedProofBase64 || "",
+                notes,
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                const btn = document.getElementById('btn-save-order');
+                btn.disabled = true;
+                btn.innerText = "Menyimpan...";
+
+                const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'bagor_orders');
+                await addDoc(ordersRef, newOrder);
+
+                showToast("Transaksi Bagi Order berhasil disimpan!", "success");
+                closeModal('modal-order');
+                document.getElementById('form-order').reset();
+                document.getElementById('custom-rate-container').classList.add('hidden');
+                clearProofImage();
+                initDates();
+            } catch (err) {
+                showToast("Gagal menyimpan: " + err.message, "error");
+            } finally {
+                const btn = document.getElementById('btn-save-order');
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Simpan Transaksi</span>`;
+            }
         };
+
+        window.togglePaymentStatus = async function(orderId, newStatus) {
+            if (!currentUser) return;
+            try {
+                const orderRef = doc(db, 'artifacts', appId, 'public', 'data', 'bagor_orders', orderId);
+                await updateDoc(orderRef, { paymentStatus: newStatus });
+                showToast(`Status pembayaran diperbarui ke ${newStatus}`, "success");
+            } catch (err) {
+                showToast("Gagal memperbarui status: " + err.message, "error");
+            }
+        };
+
+        window.deleteOrder = async function(orderId) {
+            if (!currentUser) return;
+            try {
+                const orderRef = doc(db, 'artifacts', appId, 'public', 'data', 'bagor_orders', orderId);
+                await deleteDoc(orderRef);
+                showToast("Transaksi Bagi Order berhasil dihapus.", "success");
+            } catch (err) {
+                showToast("Gagal menghapus: " + err.message, "error");
+            }
+        };
+
+        window.handleSaveMember = async function(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const name = document.getElementById('member-name').value.trim();
+            const owner = document.getElementById('member-owner').value.trim();
+            const phone = document.getElementById('member-phone').value.trim();
+            const city = document.getElementById('member-city').value.trim();
+
+            try {
+                const membersRef = collection(db, 'artifacts', appId, 'public', 'data', 'asperda_members');
+                await addDoc(membersRef, {
+                    name,
+                    owner,
+                    phone,
+                    city,
+                    createdAt: new Date().toISOString()
+                });
+
+                showToast("Anggota rental berhasil ditambahkan!", "success");
+                closeModal('modal-member');
+                document.getElementById('form-member').reset();
+            } catch (err) {
+                showToast("Gagal menambah anggota: " + err.message, "error");
+            }
+        };
+
+        window.seedSampleData = async function() {
+            if (!currentUser) {
+                showToast("Pengguna belum terverifikasi cloud.", "error");
+                return;
+            }
+
+            try {
+                showToast("Mengisi data demo...", "info");
+                const membersRef = collection(db, 'artifacts', appId, 'public', 'data', 'asperda_members');
+                const sampleMembers = [
+                    { name: "Berkah Trans Surabaya", owner: "H. Ahmad Fauzi", phone: "081234567890", city: "Surabaya", createdAt: new Date().toISOString() },
+                    { name: "Sidoarjo Jaya Rent", owner: "Bambang Kurniawan", phone: "081987654321", city: "Sidoarjo", createdAt: new Date().toISOString() },
+                    { name: "Gresik Auto Transport", owner: "Siti Rahma", phone: "082133445566", city: "Gresik", createdAt: new Date().toISOString() },
+                    { name: "Malang Luxury Car", owner: "Dedy Prasetyo", phone: "081377889900", city: "Malang", createdAt: new Date().toISOString() }
+                ];
+
+                for (const m of sampleMembers) {
+                    if (!membersData.some(existing => existing.name === m.name)) {
+                        await addDoc(membersRef, m);
+                    }
+                }
+
+                const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'bagor_orders');
+                const today = new Date().toISOString().split('T')[0];
+                const sampleOrders = [
+                    {
+                        rentalA: "Berkah Trans Surabaya",
+                        rentalB: "Sidoarjo Jaya Rent",
+                        carName: "Innova Reborn",
+                        carPlate: "L 1234 AB",
+                        category: "REGULAR",
+                        startDate: today,
+                        endDate: today,
+                        days: 2,
+                        ratePerDay: 5000,
+                        totalFee: 10000,
+                        paymentStatus: "LUNAS",
+                        paymentProof: "",
+                        notes: "Lepas Kunci",
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        rentalA: "Gresik Auto Transport",
+                        rentalB: "Malang Luxury Car",
+                        carName: "Toyota Fortuner VRZ",
+                        carPlate: "W 5678 CD",
+                        category: "MEDIUM",
+                        startDate: today,
+                        endDate: today,
+                        days: 3,
+                        ratePerDay: 10000,
+                        totalFee: 30000,
+                        paymentStatus: "PENDING",
+                        paymentProof: "",
+                        notes: "Include Driver",
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        rentalA: "Sidoarjo Jaya Rent",
+                        rentalB: "Berkah Trans Surabaya",
+                        carName: "Alphard Transformer",
+                        carPlate: "L 8888 XY",
+                        category: "LUXURY",
+                        startDate: today,
+                        endDate: today,
+                        days: 1,
+                        ratePerDay: 50000,
+                        totalFee: 50000,
+                        paymentStatus: "LUNAS",
+                        paymentProof: "",
+                        notes: "VVIP Customer",
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+
+                for (const o of sampleOrders) {
+                    await addDoc(ordersRef, o);
+                }
+
+                showToast("Data demo berhasil dimasukkan!", "success");
+            } catch (err) {
+                showToast("Gagal memasukkan demo data: " + err.message, "error");
+            }
+        };
+
+        function initKasChart() {
+            const ctx = document.getElementById('kasCategoryChart')?.getContext('2d');
+            if (!ctx) return;
+            kasCategoryChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Regular (Rp 5k)', 'Medium / SUV (Rp 10k)', 'Luxury (Rp 50k)', 'Isian / Custom'],
+                    datasets: [{
+                        label: 'Total Kas Terkumpul (Rp)',
+                        data: [0, 0, 0, 0],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.85)',
+                            'rgba(13, 148, 136, 0.85)',
+                            'rgba(147, 51, 234, 0.85)',
+                            'rgba(37, 99, 235, 0.85)'
+                        ],
+                        borderRadius: 12
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#64748b' }, grid: { display: false } },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#64748b',
+                                callback: function(value) { return 'Rp ' + value.toLocaleString('id-ID'); }
+                            },
+                            grid: { color: 'rgba(226, 232, 240, 0.8)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChartData() {
+            if (!kasCategoryChart) return;
+
+            let regFee = 0, medFee = 0, luxFee = 0, customFee = 0;
+            ordersData.forEach(o => {
+                const fee = parseInt(o.totalFee) || 0;
+                if (o.category === 'REGULAR') regFee += fee;
+                else if (o.category === 'MEDIUM') medFee += fee;
+                else if (o.category === 'LUXURY') luxFee += fee;
+                else if (o.category === 'CUSTOM') customFee += fee;
+            });
+
+            kasCategoryChart.data.datasets[0].data = [regFee, medFee, luxFee, customFee];
+            kasCategoryChart.update();
+        }
+
+        function initMonthlyChart() {
+            const ctx = document.getElementById('kasMonthlyChart')?.getContext('2d');
+            if (!ctx) return;
+            kasMonthlyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'],
+                    datasets: [
+                        {
+                            label: 'Kas Lunas (Rp)',
+                            data: new Array(12).fill(0),
+                            backgroundColor: 'rgba(16, 185, 129, 0.85)',
+                            borderRadius: 8
+                        },
+                        {
+                            label: 'Tagihan Pending (Rp)',
+                            data: new Array(12).fill(0),
+                            backgroundColor: 'rgba(245, 158, 11, 0.85)',
+                            borderRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: { font: { family: 'Plus Jakarta Sans', size: 11 } }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#64748b' }, grid: { display: false } },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#64748b',
+                                callback: function(value) { return 'Rp ' + value.toLocaleString('id-ID'); }
+                            },
+                            grid: { color: 'rgba(226, 232, 240, 0.8)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        window.updateMonthlyChartData = function() {
+            if (!kasMonthlyChart) return;
+            const selectedYear = parseInt(document.getElementById('chart-year-select')?.value) || new Date().getFullYear();
+
+            const monthlyLunas = new Array(12).fill(0);
+            const monthlyPending = new Array(12).fill(0);
+
+            ordersData.forEach(o => {
+                if (!o.startDate) return;
+                const d = new Date(o.startDate);
+                if (d.getFullYear() === selectedYear) {
+                    const m = d.getMonth();
+                    const fee = parseInt(o.totalFee) || 0;
+                    if (o.paymentStatus === 'LUNAS') {
+                        monthlyLunas[m] += fee;
+                    } else {
+                        monthlyPending[m] += fee;
+                    }
+                }
+            });
+
+            kasMonthlyChart.data.datasets[0].data = monthlyLunas;
+            kasMonthlyChart.data.datasets[1].data = monthlyPending;
+            kasMonthlyChart.update();
+
+            const currentMonth = new Date().getMonth();
+            const currentMonthLunas = monthlyLunas[currentMonth];
+            const currentMonthPending = monthlyPending[currentMonth];
+            const currentMonthTotal = currentMonthLunas + currentMonthPending;
+
+            const thisMonthValElem = document.getElementById('stat-this-month-val');
+            if (thisMonthValElem) thisMonthValElem.innerText = formatRupiah(currentMonthTotal);
+
+            const thisMonthPaidElem = document.getElementById('stat-this-month-paid');
+            if (thisMonthPaidElem) thisMonthPaidElem.innerText = formatRupiah(currentMonthLunas);
+
+            const thisMonthPendingElem = document.getElementById('stat-this-month-pending');
+            if (thisMonthPendingElem) thisMonthPendingElem.innerText = formatRupiah(currentMonthPending);
+        };
+
+        function getCategoryBadgeHTML(category, ratePerDay) {
+            if (category === 'LUXURY') {
+                return `<span class="bg-purple-100 text-purple-800 border border-purple-200 text-[10px] font-extrabold px-2 py-0.5 rounded-md">LUXURY (50k)</span>`;
+            } else if (category === 'MEDIUM') {
+                return `<span class="bg-teal-100 text-teal-800 border border-teal-200 text-[10px] font-extrabold px-2 py-0.5 rounded-md">MEDIUM/SUV (10k)</span>`;
+            } else if (category === 'CUSTOM') {
+                return `<span class="bg-blue-100 text-blue-800 border border-blue-200 text-[10px] font-extrabold px-2 py-0.5 rounded-md">ISIAN (${formatRupiah(ratePerDay)}/hr)</span>`;
+            } else {
+                return `<span class="bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-md">REGULAR (5k)</span>`;
+            }
+        }
 
         function renderOrdersTable() {
             const tbody = document.getElementById('orders-table-body');
@@ -1063,7 +1385,7 @@
             }
 
             tbody.innerHTML = filtered.map(order => {
-                const categoryBadge = getCategoryBadgeHTML(order.category);
+                const categoryBadge = getCategoryBadgeHTML(order.category, order.ratePerDay);
                 const statusBadge = order.paymentStatus === 'LUNAS' 
                     ? `<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-bold px-2.5 py-1 rounded-full inline-flex items-center space-x-1"><i class="fa-solid fa-check-circle"></i><span>Lunas</span></span>`
                     : `<span class="bg-amber-100 text-amber-800 border border-amber-300 text-xs font-bold px-2.5 py-1 rounded-full inline-flex items-center space-x-1"><i class="fa-solid fa-clock"></i><span>Belum Bayar</span></span>`;
@@ -1294,312 +1616,6 @@
             `).join('');
         }
 
-        function initMonthlyChart() {
-            const ctx = document.getElementById('kasMonthlyChart').getContext('2d');
-            kasMonthlyChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'],
-                    datasets: [
-                        {
-                            label: 'Kas Lunas (Rp)',
-                            data: new Array(12).fill(0),
-                            backgroundColor: 'rgba(16, 185, 129, 0.85)',
-                            borderRadius: 8
-                        },
-                        {
-                            label: 'Tagihan Pending (Rp)',
-                            data: new Array(12).fill(0),
-                            backgroundColor: 'rgba(245, 158, 11, 0.85)',
-                            borderRadius: 8
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: { font: { family: 'Plus Jakarta Sans', size: 11 } }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            ticks: { color: '#64748b' },
-                            grid: { display: false }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: '#64748b',
-                                callback: function(value) { return 'Rp ' + value.toLocaleString('id-ID'); }
-                            },
-                            grid: { color: 'rgba(226, 232, 240, 0.8)' }
-                        }
-                    }
-                }
-            });
-        }
-
-        window.updateMonthlyChartData = function() {
-            if (!kasMonthlyChart) return;
-            const selectedYear = parseInt(document.getElementById('chart-year-select')?.value) || new Date().getFullYear();
-
-            const monthlyLunas = new Array(12).fill(0);
-            const monthlyPending = new Array(12).fill(0);
-
-            ordersData.forEach(o => {
-                if (!o.startDate) return;
-                const d = new Date(o.startDate);
-                if (d.getFullYear() === selectedYear) {
-                    const m = d.getMonth();
-                    const fee = parseInt(o.totalFee) || 0;
-                    if (o.paymentStatus === 'LUNAS') {
-                        monthlyLunas[m] += fee;
-                    } else {
-                        monthlyPending[m] += fee;
-                    }
-                }
-            });
-
-            kasMonthlyChart.data.datasets[0].data = monthlyLunas;
-            kasMonthlyChart.data.datasets[1].data = monthlyPending;
-            kasMonthlyChart.update();
-
-            // Calculate current month statistics
-            const currentMonth = new Date().getMonth();
-            const currentMonthLunas = monthlyLunas[currentMonth];
-            const currentMonthPending = monthlyPending[currentMonth];
-            const currentMonthTotal = currentMonthLunas + currentMonthPending;
-
-            const thisMonthValElem = document.getElementById('stat-this-month-val');
-            if (thisMonthValElem) thisMonthValElem.innerText = formatRupiah(currentMonthTotal);
-
-            const thisMonthPaidElem = document.getElementById('stat-this-month-paid');
-            if (thisMonthPaidElem) thisMonthPaidElem.innerText = formatRupiah(currentMonthLunas);
-
-            const thisMonthPendingElem = document.getElementById('stat-this-month-pending');
-            if (thisMonthPendingElem) thisMonthPendingElem.innerText = formatRupiah(currentMonthPending);
-        };
-
-        function initKasChart() {
-            const ctx = document.getElementById('kasCategoryChart').getContext('2d');
-            kasCategoryChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Regular (Rp 5k)', 'Medium / SUV (Rp 10k)', 'Luxury (Rp 50k)'],
-                    datasets: [{
-                        label: 'Total Kas Terkumpul (Rp)',
-                        data: [0, 0, 0],
-                        backgroundColor: [
-                            'rgba(16, 185, 129, 0.85)',
-                            'rgba(13, 148, 136, 0.85)',
-                            'rgba(147, 51, 234, 0.85)'
-                        ],
-                        borderRadius: 12
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        x: {
-                            ticks: { color: '#64748b' },
-                            grid: { display: false }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: '#64748b',
-                                callback: function(value) { return 'Rp ' + value.toLocaleString('id-ID'); }
-                            },
-                            grid: { color: 'rgba(226, 232, 240, 0.8)' }
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateChartData() {
-            if (!kasCategoryChart) return;
-
-            let regFee = 0, medFee = 0, luxFee = 0;
-            ordersData.forEach(o => {
-                const fee = parseInt(o.totalFee) || 0;
-                if (o.category === 'REGULAR') regFee += fee;
-                else if (o.category === 'MEDIUM') medFee += fee;
-                else if (o.category === 'LUXURY') luxFee += fee;
-            });
-
-            kasCategoryChart.data.datasets[0].data = [regFee, medFee, luxFee];
-            kasCategoryChart.update();
-        }
-
-        window.autoDetectCategory = function() {
-            const carName = document.getElementById('input-car-name').value.toLowerCase();
-            const categorySelect = document.getElementById('input-car-category');
-
-            if (!carName || !categorySelect) return;
-
-            if (carName.includes('alphard') || carName.includes('vellfire') || carName.includes('mercy') || carName.includes('bmw') || carName.includes('camry') || carName.includes('mewah')) {
-                categorySelect.value = 'LUXURY';
-            } else if (carName.includes('zenix') || carName.includes('fortuner') || carName.includes('pajero') || carName.includes('hiace') || carName.includes('premio') || carName.includes('elf') || carName.includes('venturer')) {
-                categorySelect.value = 'MEDIUM';
-            } else {
-                categorySelect.value = 'REGULAR';
-            }
-
-            calculateFee();
-        };
-
-        window.calculateFee = function() {
-            const category = document.getElementById('input-car-category').value;
-            const startDateVal = document.getElementById('input-start-date').value;
-            const endDateVal = document.getElementById('input-end-date').value;
-
-            let rate = RATE_REGULAR;
-            if (category === 'MEDIUM') rate = RATE_MEDIUM;
-            if (category === 'LUXURY') rate = RATE_LUXURY;
-
-            let days = 1;
-            if (startDateVal && endDateVal) {
-                const d1 = new Date(startDateVal);
-                const d2 = new Date(endDateVal);
-                const diffTime = Math.abs(d2 - d1);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-                days = Math.max(1, diffDays);
-            }
-
-            const total = days * rate;
-
-            document.getElementById('calculation-breakdown-text').innerText = `${days} Hari x ${formatRupiah(rate)} = ${formatRupiah(total)}`;
-            document.getElementById('calculation-total-amount').innerText = formatRupiah(total);
-        };
-
-        window.handleSaveOrder = async function(e) {
-            e.preventDefault();
-            if (!currentUser) {
-                showToast("Pengguna belum terverifikasi cloud.", "error");
-                return;
-            }
-
-            const rentalA = document.getElementById('input-rental-a').value;
-            const rentalB = document.getElementById('input-rental-b').value;
-            const carName = document.getElementById('input-car-name').value.trim();
-            const carPlate = document.getElementById('input-car-plate').value.trim();
-            const category = document.getElementById('input-car-category').value;
-            const startDate = document.getElementById('input-start-date').value;
-            const endDate = document.getElementById('input-end-date').value;
-            const paymentStatus = document.getElementById('input-payment-status').value;
-            const notes = document.getElementById('input-notes').value.trim();
-
-            if (rentalA === rentalB) {
-                showToast("Pemilik Order dan Penerima Order tidak boleh sama!", "error");
-                return;
-            }
-
-            let ratePerDay = RATE_REGULAR;
-            if (category === 'MEDIUM') ratePerDay = RATE_MEDIUM;
-            if (category === 'LUXURY') ratePerDay = RATE_LUXURY;
-
-            const d1 = new Date(startDate);
-            const d2 = new Date(endDate);
-            const days = Math.max(1, Math.ceil(Math.abs(d2 - d1) / (1000 * 60 * 60 * 24)) + 1);
-            const totalFee = days * ratePerDay;
-
-            const newOrder = {
-                rentalA,
-                rentalB,
-                carName,
-                carPlate,
-                category,
-                startDate,
-                endDate,
-                days,
-                ratePerDay,
-                totalFee,
-                paymentStatus,
-                paymentProof: uploadedProofBase64 || "",
-                notes,
-                createdAt: new Date().toISOString()
-            };
-
-            try {
-                const btn = document.getElementById('btn-save-order');
-                btn.disabled = true;
-                btn.innerText = "Menyimpan...";
-
-                const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'bagor_orders');
-                await addDoc(ordersRef, newOrder);
-
-                showToast("Transaksi Bagi Order berhasil disimpan!", "success");
-                closeModal('modal-order');
-                document.getElementById('form-order').reset();
-                clearProofImage();
-                initDates();
-            } catch (err) {
-                showToast("Gagal menyimpan: " + err.message, "error");
-            } finally {
-                const btn = document.getElementById('btn-save-order');
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Simpan Transaksi</span>`;
-            }
-        };
-
-        window.togglePaymentStatus = async function(orderId, newStatus) {
-            if (!currentUser) return;
-            try {
-                const orderRef = doc(db, 'artifacts', appId, 'public', 'data', 'bagor_orders', orderId);
-                await updateDoc(orderRef, { paymentStatus: newStatus });
-                showToast(`Status pembayaran diperbarui ke ${newStatus}`, "success");
-            } catch (err) {
-                showToast("Gagal memperbarui status: " + err.message, "error");
-            }
-        };
-
-        window.deleteOrder = async function(orderId) {
-            if (!currentUser) return;
-            try {
-                const orderRef = doc(db, 'artifacts', appId, 'public', 'data', 'bagor_orders', orderId);
-                await deleteDoc(orderRef);
-                showToast("Transaksi Bagi Order berhasil dihapus.", "success");
-            } catch (err) {
-                showToast("Gagal menghapus: " + err.message, "error");
-            }
-        };
-
-        window.handleSaveMember = async function(e) {
-            e.preventDefault();
-            if (!currentUser) return;
-
-            const name = document.getElementById('member-name').value.trim();
-            const owner = document.getElementById('member-owner').value.trim();
-            const phone = document.getElementById('member-phone').value.trim();
-            const city = document.getElementById('member-city').value.trim();
-
-            try {
-                const membersRef = collection(db, 'artifacts', appId, 'public', 'data', 'asperda_members');
-                await addDoc(membersRef, {
-                    name,
-                    owner,
-                    phone,
-                    city,
-                    createdAt: new Date().toISOString()
-                });
-
-                showToast("Anggota rental berhasil ditambahkan!", "success");
-                closeModal('modal-member');
-                document.getElementById('form-member').reset();
-            } catch (err) {
-                showToast("Gagal menambah anggota: " + err.message, "error");
-            }
-        };
-
         window.openReceiptModal = function(orderId) {
             const order = ordersData.find(o => o.id === orderId);
             if (!order) return;
@@ -1687,16 +1703,6 @@ _Sistem Monitoring Bagor ASPERDA Indonesia_`;
             document.getElementById('filter-status').value = status;
             applyFilters();
         };
-
-        function getCategoryBadgeHTML(category) {
-            if (category === 'LUXURY') {
-                return `<span class="bg-purple-100 text-purple-800 border border-purple-200 text-[10px] font-extrabold px-2 py-0.5 rounded-md">LUXURY (50k)</span>`;
-            } else if (category === 'MEDIUM') {
-                return `<span class="bg-teal-100 text-teal-800 border border-teal-200 text-[10px] font-extrabold px-2 py-0.5 rounded-md">MEDIUM/SUV (10k)</span>`;
-            } else {
-                return `<span class="bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-md">REGULAR (5k)</span>`;
-            }
-        }
 
         function initDates() {
             const today = new Date().toISOString().split('T')[0];
