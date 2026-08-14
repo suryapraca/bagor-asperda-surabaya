@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bagor Asperda - Monitoring Bagi Order Rental Mobil</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        asperda: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js for Financial & Order Reports -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(241, 245, 249, 0.8);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 99px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen pb-24 flex flex-col justify-between bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-50/20">
+
+    <!-- Top Header Bar -->
+    <header class="bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white shadow-lg sticky top-0 z-30 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo & App Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-tr from-emerald-400 via-teal-400 to-green-500 text-slate-950 p-2.5 rounded-2xl font-black text-xl shadow-lg shadow-emerald-500/20 flex items-center justify-center w-10 h-10 transform hover:rotate-6 transition-transform">
+                        <i class="fa-solid fa-car-side text-slate-900"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="font-extrabold text-lg sm:text-xl tracking-tight text-white">BAGOR ASPERDA</h1>
+                            <span class="bg-gradient-to-r from-emerald-400/30 to-teal-400/30 text-emerald-200 text-[10px] px-2 py-0.5 rounded-full border border-emerald-400/30 font-bold">v3.0 Light</span>
+                        </div>
+                        <p class="text-[11px] text-emerald-200/80 hidden sm:block">Aplikasi Monitoring Bagi Order & Kas Organisasi Rental Mobil</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-3">
+                    <div id="db-status-badge" class="flex items-center space-x-2 bg-emerald-900/60 text-emerald-200 px-3 py-1 rounded-full text-xs font-medium border border-emerald-500/30 shadow-inner">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span id="db-status-text" class="text-[11px] sm:text-xs">Online Cloud</span>
+                    </div>
+
+                    <button onclick="openNewOrderModal()" class="hidden sm:flex bg-gradient-to-r from-emerald-500 via-teal-500 to-green-600 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-lg shadow-emerald-600/20 transition-all transform active:scale-95 items-center space-x-2">
+                        <i class="fa-solid fa-plus-circle text-base"></i>
+                        <span>Bagi Order Baru</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-grow">
+
+        <!-- Stat Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <!-- Metric 1: Total Bagi Order -->
+            <div class="glass-card p-5 rounded-3xl shadow-sm hover:shadow-md hover:border-emerald-300 transition-all relative overflow-hidden group">
+                <div class="flex items-center justify-between relative z-10">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Total Transaksi Bagor</p>
+                        <h3 id="stat-total-orders" class="text-3xl font-extrabold text-slate-800 mt-1">0</h3>
+                        <p class="text-xs text-slate-500 mt-1"><span id="stat-total-days" class="font-bold text-emerald-600">0</span> Total Hari Unit Terlayani</p>
+                    </div>
+                    <div class="w-12 h-12 bg-gradient-to-tr from-emerald-500 to-teal-600 text-white rounded-2xl flex items-center justify-center text-xl shadow-md shadow-emerald-500/20">
+                        <i class="fa-solid fa-handshake"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metric 2: Kas Terkumpul -->
+            <div class="glass-card p-5 rounded-3xl shadow-sm hover:shadow-md hover:border-emerald-300 transition-all relative overflow-hidden group">
+                <div class="flex items-center justify-between relative z-10">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Kas Terbayar (Lunas)</p>
+                        <h3 id="stat-paid-amount" class="text-3xl font-extrabold text-emerald-600 mt-1">Rp 0</h3>
+                        <p class="text-xs text-slate-500 mt-1"><span id="stat-paid-count" class="font-bold text-emerald-600">0</span> Transaksi Selesai</p>
+                    </div>
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center text-xl shadow-sm">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metric 3: Pending Payment -->
+            <div class="glass-card p-5 rounded-3xl shadow-sm hover:shadow-md hover:border-amber-300 transition-all relative overflow-hidden group">
+                <div class="flex items-center justify-between relative z-10">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-amber-700">Tagihan Belum Bayar</p>
+                        <h3 id="stat-pending-amount" class="text-3xl font-extrabold text-amber-600 mt-1">Rp 0</h3>
+                        <p class="text-xs text-slate-500 mt-1"><span id="stat-pending-count" class="font-bold text-amber-600">0</span> Menunggu Transfer</p>
+                    </div>
+                    <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center text-xl shadow-sm">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metric 4: Total Potensi Kas -->
+            <div class="glass-card p-5 rounded-3xl shadow-sm hover:shadow-md hover:border-teal-300 transition-all relative overflow-hidden group">
+                <div class="flex items-center justify-between relative z-10">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-teal-700">Total Kas Bagor</p>
+                        <h3 id="stat-total-kas" class="text-3xl font-extrabold text-slate-800 mt-1">Rp 0</h3>
+                        <p class="text-xs text-slate-500 mt-1">Target Pendapatan Kas</p>
+                    </div>
+                    <div class="w-12 h-12 bg-gradient-to-tr from-teal-500 to-emerald-600 text-white rounded-2xl flex items-center justify-center text-xl shadow-md shadow-teal-500/20">
+                        <i class="fa-solid fa-vault"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section id="tab-monitoring" class="tab-content block space-y-4">
+            
+            <!-- Filter Bar -->
+            <div class="glass-card p-4 rounded-3xl shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between border border-slate-200">
+                <div class="relative w-full md:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                    <input type="text" id="filter-search" oninput="applyFilters()" placeholder="Cari Rental, Unit Mobil, Plat..." 
+                           class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all">
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
+                    <select id="filter-status" onchange="applyFilters()" class="bg-slate-50 border border-slate-200 text-xs sm:text-sm rounded-2xl px-3 py-2.5 text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="ALL">Semua Status Fee</option>
+                        <option value="PENDING">Belum Bayar (Pending)</option>
+                        <option value="LUNAS">Sudah Lunas</option>
+                    </select>
+
+                    <select id="filter-category" onchange="applyFilters()" class="bg-slate-50 border border-slate-200 text-xs sm:text-sm rounded-2xl px-3 py-2.5 text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="ALL">Semua Kategori Unit</option>
+                        <option value="REGULAR">Regular (Rp 5.000/hr)</option>
+                        <option value="MEDIUM">Medium / SUV (Rp 10.000/hr)</option>
+                        <option value="LUXURY">Mewah / Luxury (Rp 50.000/hr)</option>
+                    </select>
+
+                    <button onclick="resetFilters()" title="Reset Filter" class="p-2.5 border border-slate-200 rounded-2xl hover:bg-slate-100 text-slate-600 transition-colors">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                    <button onclick="seedSampleData()" title="Isi Contoh Data Demo" class="px-3 py-2.5 bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 border border-emerald-300 text-emerald-800 rounded-2xl text-xs font-bold transition-all flex items-center space-x-1.5 shadow-sm">
+                        <i class="fa-solid fa-database text-emerald-600"></i>
+                        <span>Isi Demo</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table Container -->
+            <div class="glass-card rounded-3xl shadow-sm overflow-hidden border border-slate-200">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100/80 border-b border-slate-200 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                                <th class="p-4">Tanggal & Ref</th>
+                                <th class="p-4">Pihak Bagi Order</th>
+                                <th class="p-4">Unit Mobil</th>
+                                <th class="p-4">Durasi & Kategori</th>
+                                <th class="p-4">Fee Kas Bagor</th>
+                                <th class="p-4 text-center">Status Pembayaran</th>
+                                <th class="p-4 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body" class="divide-y divide-slate-100 text-xs sm:text-sm text-slate-700">
+                            <tr>
+                                <td colspan="7" class="p-8 text-center text-slate-500">
+                                    <i class="fa-solid fa-spinner fa-spin text-2xl text-emerald-600 mb-2"></i>
+                                    <p class="text-sm">Memuat data transaksi Bagi Order...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+                    <p>Menampilkan <span id="filtered-count-text" class="font-bold text-emerald-700">0</span> dari <span id="total-count-text" class="font-bold text-emerald-700">0</span> transaksi bagi order</p>
+                    <p class="italic">*Note: Kas Bagor ASPERDA dibayarkan oleh **Penerima Order**.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-kas" class="tab-content hidden space-y-6">
+            
+            <!-- Dashboard Grafik Pendapatan Bulanan Bagor -->
+            <div class="glass-card p-6 rounded-3xl shadow-sm border border-slate-200">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base flex items-center space-x-2">
+                            <i class="fa-solid fa-chart-line text-emerald-600 text-lg"></i>
+                            <span>Grafik Pendapatan Bagor Bulanan</span>
+                        </h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Tren arus kas penerimaan fee Bagi Order ASPERDA per bulan</p>
+                    </div>
+
+                    <div class="flex items-center space-x-3">
+                        <select id="chart-year-select" onchange="updateMonthlyChartData()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-1.5 font-bold text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <option value="2026">Tahun 2026</option>
+                            <option value="2025">Tahun 2025</option>
+                        </select>
+                        <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-200">
+                            Dashboard Keuangan
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Monthly Revenue Overview Metric Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                    <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/80 p-3.5 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-[11px] font-bold text-emerald-800 uppercase">Total Kas Bulan Ini</p>
+                            <h4 id="stat-this-month-val" class="text-xl font-extrabold text-emerald-700 mt-0.5">Rp 0</h4>
+                        </div>
+                        <i class="fa-solid fa-calendar-check text-emerald-500 text-2xl opacity-70"></i>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-[11px] font-bold text-slate-600 uppercase">Kas Lunas Bulan Ini</p>
+                            <h4 id="stat-this-month-paid" class="text-xl font-extrabold text-emerald-600 mt-0.5">Rp 0</h4>
+                        </div>
+                        <i class="fa-solid fa-circle-check text-emerald-500 text-2xl opacity-70"></i>
+                    </div>
+
+                    <div class="bg-amber-50/50 border border-amber-200/80 p-3.5 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-[11px] font-bold text-amber-800 uppercase">Tagihan Pending Bulan Ini</p>
+                            <h4 id="stat-this-month-pending" class="text-xl font-extrabold text-amber-600 mt-0.5">Rp 0</h4>
+                        </div>
+                        <i class="fa-solid fa-clock-rotate-left text-amber-500 text-2xl opacity-70"></i>
+                    </div>
+                </div>
+
+                <!-- Monthly Chart Canvas Container -->
+                <div class="h-72 sm:h-80 relative">
+                    <canvas id="kasMonthlyChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Kas Visual Breakdown Chart -->
+                <div class="glass-card p-5 rounded-3xl shadow-sm border border-slate-200 lg:col-span-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-slate-800 text-base flex items-center space-x-2">
+                            <i class="fa-solid fa-chart-column text-emerald-600"></i>
+                            <span>Kas Bagor per Kategori Mobil</span>
+                        </h3>
+                        <span class="text-xs bg-slate-100 text-slate-600 font-semibold px-3 py-1 rounded-full border border-slate-200">Per Kategori</span>
+                    </div>
+                    <div class="h-64 relative">
+                        <canvas id="kasCategoryChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Leaderboard Rental Paling Aktif -->
+                <div class="glass-card p-5 rounded-3xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base mb-1 flex items-center space-x-2">
+                            <i class="fa-solid fa-award text-amber-500 text-lg"></i>
+                            <span>Penerima Order Terbanyak</span>
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-4">Anggota rental penerima order paling aktif berkontribusi ke kas Asperda.</p>
+                        
+                        <div id="top-providers-list" class="space-y-2.5 custom-scrollbar max-h-64 overflow-y-auto pr-1">
+                            <p class="text-xs text-slate-400 italic">Belum ada data transaksi.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-slate-200 bg-emerald-50/50 p-3.5 rounded-2xl border border-emerald-200/80">
+                        <p class="text-xs text-emerald-800 font-medium leading-relaxed flex items-start space-x-2">
+                            <i class="fa-solid fa-circle-info text-emerald-600 mt-0.5"></i>
+                            <span>Setiap penyerahan order membantu kolega rental sekaligus memperkuat dana kas kegiatan ASPERDA.</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rekap Tunggakan Kas -->
+            <div class="glass-card p-5 rounded-3xl shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-bold text-slate-800 text-base flex items-center space-x-2">
+                        <i class="fa-solid fa-clock-rotate-left text-amber-500"></i>
+                        <span>Daftar Tagihan Kas Belum Lunas (Pending)</span>
+                    </h3>
+                    <button onclick="switchTab('tab-monitoring'); setStatusFilter('PENDING');" class="text-xs text-emerald-700 hover:text-emerald-800 font-bold underline">
+                        Kelola Semua
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-xs sm:text-sm">
+                        <thead class="bg-slate-100 text-slate-600 uppercase font-semibold border-b border-slate-200">
+                            <tr>
+                                <th class="p-3">Penerima Order (Wajib Bayar)</th>
+                                <th class="p-3">Pemilik Order</th>
+                                <th class="p-3">Unit Mobil</th>
+                                <th class="p-3">Tanggal Order</th>
+                                <th class="p-3">Nominal Fee Bagor</th>
+                                <th class="p-3 text-right">Aksi Pelunasan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pending-kas-table-body" class="divide-y divide-slate-100">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-anggota" class="tab-content hidden space-y-4">
+            <div class="glass-card p-4 rounded-3xl shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div>
+                    <h3 class="font-bold text-slate-800 text-base">Direktori Anggota ASPERDA</h3>
+                    <p class="text-xs text-slate-500">Daftar badan usaha rental terverifikasi dalam jaringan Bagi Order.</p>
+                </div>
+                <button onclick="openMemberModal()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-2xl shadow-md transition-all flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>Tambah Anggota Rental</span>
+                </button>
+            </div>
+
+            <div id="members-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            </div>
+        </section>
+
+        <section id="tab-tarif" class="tab-content hidden space-y-6">
+            <div class="glass-card p-6 rounded-3xl shadow-sm border border-slate-200">
+                <div class="max-w-3xl">
+                    <span class="bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">SK Rapat Anggota ASPERDA</span>
+                    <h2 class="text-2xl font-extrabold text-slate-800 mt-3 mb-3">Ketentuan & Tarif Kas Bagi Order (BAGOR)</h2>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6">
+                        Dalam rangka menertibkan iklim bisnis rental mobil, mempererat persaudaraan sesama anggota ASPERDA, serta memperkuat kas kegiatan organisasi, setiap transaksi <strong>Bagi Order (Outsource Unit)</strong> dikenakan kontribusi kas wajib yang dibayarkan oleh <strong>Penerima Order (Pemilik Mobil yang menerima job)</strong>.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- Class 1: Regular -->
+                    <div class="border border-emerald-200 bg-gradient-to-b from-emerald-50/50 to-white rounded-3xl p-5 relative overflow-hidden flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-emerald-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl uppercase shadow-sm">Kelas Standard / MPV</span>
+                                <i class="fa-solid fa-car text-emerald-600 text-xl"></i>
+                            </div>
+                            <div class="my-3">
+                                <span class="text-3xl font-black text-emerald-700">Rp 5.000</span>
+                                <span class="text-xs font-semibold text-slate-500">/ hari sewa</span>
+                            </div>
+                            <p class="text-xs text-slate-700 font-semibold mb-3">Contoh armada kendaraan:</p>
+                            <ul class="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
+                                <li>Toyota Avanza / Veloz</li>
+                                <li>Toyota Calya / Daihatsu Sigra</li>
+                                <li>Toyota Innova Reborn / Grand New</li>
+                                <li>Suzuki Ertiga / XL7</li>
+                                <li>Mitsubishi Xpander / Brio / Mobilio</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-emerald-200 text-[11px] text-emerald-800 font-semibold">
+                            Contoh: 3 hari Innova = Rp 15.000 Kas Bagor
+                        </div>
+                    </div>
+
+                    <!-- Class 2: Medium & SUV -->
+                    <div class="border border-teal-200 bg-gradient-to-b from-teal-50/50 to-white rounded-3xl p-5 relative overflow-hidden flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-teal-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl uppercase shadow-sm">Medium / SUV / Microbus</span>
+                                <i class="fa-solid fa-van-shuttle text-teal-600 text-xl"></i>
+                            </div>
+                            <div class="my-3">
+                                <span class="text-3xl font-black text-teal-700">Rp 10.000</span>
+                                <span class="text-xs font-semibold text-slate-500">/ hari sewa</span>
+                            </div>
+                            <p class="text-xs text-slate-700 font-semibold mb-3">Contoh armada kendaraan:</p>
+                            <ul class="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
+                                <li>Toyota Innova Zenix Q / V Hybrid</li>
+                                <li>Toyota Fortuner / VRZ / GR</li>
+                                <li>Mitsubishi Pajero Sport</li>
+                                <li>Toyota Hiace Premio / Commuter</li>
+                                <li>Isuzu Elf Long / Coaster</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-teal-200 text-[11px] text-teal-800 font-semibold">
+                            Contoh: 2 hari Fortuner = Rp 20.000 Kas Bagor
+                        </div>
+                    </div>
+
+                    <!-- Class 3: Luxury -->
+                    <div class="border border-purple-200 bg-gradient-to-b from-purple-50/50 to-white rounded-3xl p-5 relative overflow-hidden flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-purple-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl uppercase shadow-sm">Mewah / Luxury VIP</span>
+                                <i class="fa-solid fa-gem text-purple-600 text-xl"></i>
+                            </div>
+                            <div class="my-3">
+                                <span class="text-3xl font-black text-purple-700">Rp 50.000</span>
+                                <span class="text-xs font-semibold text-slate-500">/ hari sewa</span>
+                            </div>
+                            <p class="text-xs text-slate-700 font-semibold mb-3">Contoh armada kendaraan:</p>
+                            <ul class="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
+                                <li>Toyota Alphard / Vellfire</li>
+                                <li>Toyota Camry / Accord</li>
+                                <li>Mercedes-Benz C/E/S Class</li>
+                                <li>BMW 3 / 5 / 7 Series</li>
+                                <li>Mobil Mewah / Premium lainnya</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-purple-200 text-[11px] text-purple-800 font-semibold">
+                            Contoh: 2 hari Alphard = Rp 100.000 Kas Bagor
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-2 text-xs text-slate-700">
+                    <h4 class="font-bold text-emerald-800 text-sm flex items-center space-x-1.5">
+                        <i class="fa-solid fa-gavel"></i>
+                        <span>Prosedur Pembayaran Bagi Order:</span>
+                    </h4>
+                    <ol class="list-decimal list-inside space-y-1.5 leading-relaxed pl-1">
+                        <li>Pemilik Order menginput transaksi Bagi Order ke dalam sistem Bagor ASPERDA.</li>
+                        <li>Penerima Order mengonfirmasi kecocokan tanggal dan ketersediaan unit.</li>
+                        <li>Kas Bagor dihitung otomatis berdasarkan durasi hari × tarif kelas kendaraan.</li>
+                        <li>Penerima Order melakukan kewajiban penyetoran fee Kas Bagor ke Bendahara ASPERDA sebelum atau sesudah unit selesai bertugas.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Mobile Navigation Bar -->
+    <nav class="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-xl px-2 py-1">
+        <div class="max-w-md mx-auto flex items-center justify-around text-center">
+            
+            <button onclick="switchTab('tab-monitoring')" id="nav-tab-monitoring" class="tab-btn active flex-1 py-2 px-1 flex flex-col items-center text-emerald-600 rounded-2xl transition-all">
+                <i class="fa-solid fa-list-check text-lg mb-0.5"></i>
+                <span class="text-[10px] font-bold tracking-tight">Monitoring</span>
+            </button>
+
+            <button onclick="switchTab('tab-kas')" id="nav-tab-kas" class="tab-btn flex-1 py-2 px-1 flex flex-col items-center text-slate-400 rounded-2xl transition-all">
+                <i class="fa-solid fa-wallet text-lg mb-0.5"></i>
+                <span class="text-[10px] font-bold tracking-tight">Kas Keuangan</span>
+            </button>
+
+            <!-- Floating Action Button for New Order -->
+            <button onclick="openNewOrderModal()" class="relative -top-4 bg-gradient-to-tr from-emerald-500 via-teal-500 to-green-600 hover:from-emerald-400 hover:to-teal-400 text-white p-3.5 rounded-full shadow-xl shadow-emerald-600/30 transition-transform active:scale-95 flex items-center justify-center border-4 border-slate-50">
+                <i class="fa-solid fa-plus text-xl font-black"></i>
+            </button>
+
+            <button onclick="switchTab('tab-anggota')" id="nav-tab-anggota" class="tab-btn flex-1 py-2 px-1 flex flex-col items-center text-slate-400 rounded-2xl transition-all">
+                <i class="fa-solid fa-users-gear text-lg mb-0.5"></i>
+                <span class="text-[10px] font-bold tracking-tight">Anggota</span>
+            </button>
+
+            <button onclick="switchTab('tab-tarif')" id="nav-tab-tarif" class="tab-btn flex-1 py-2 px-1 flex flex-col items-center text-slate-400 rounded-2xl transition-all">
+                <i class="fa-solid fa-tags text-lg mb-0.5"></i>
+                <span class="text-[10px] font-bold tracking-tight">Aturan Tarif</span>
+            </button>
+
+        </div>
+    </nav>
+
+    <!-- Modal Input Bagi Order Baru -->
+    <div id="modal-order" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white border border-slate-200 rounded-3xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto custom-scrollbar flex flex-col text-slate-800">
+            <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white rounded-t-3xl">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-file-circle-plus text-emerald-300 text-xl"></i>
+                    <div>
+                        <h3 class="font-bold text-base">Input Transaksi Bagi Order Baru</h3>
+                        <p class="text-xs text-emerald-100">Catat peminjaman unit antar anggota ASPERDA</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-order')" class="text-emerald-200 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <form id="form-order" onsubmit="handleSaveOrder(event)" class="p-6 space-y-4 text-xs sm:text-sm">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">
+                            Pemilik Order <span class="text-rose-500">*</span>
+                        </label>
+                        <select id="input-rental-a" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-2.5 text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:outline-none">
+                            <option value="">-- Pilih Pemilik Order --</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">
+                            Penerima Order <span class="text-rose-500">*</span>
+                        </label>
+                        <select id="input-rental-b" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-2.5 text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:outline-none">
+                            <option value="">-- Pilih Penerima Order --</option>
+                        </select>
+                        <p class="text-[10px] text-emerald-700 mt-1 font-medium">*Pihak yang berkewajiban membayarkan fee kas Bagor</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                    <h4 class="font-bold text-emerald-800 text-xs uppercase tracking-wider flex items-center space-x-1">
+                        <i class="fa-solid fa-car"></i>
+                        <span>Informasi Unit & Kategori Tarif Bagor</span>
+                    </h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-slate-700 text-xs mb-1 font-semibold">Nama / Type Mobil <span class="text-rose-500">*</span></label>
+                            <input type="text" id="input-car-name" required placeholder="misal: Innova Zenix Q, Fortuner, Avanza" 
+                                   oninput="autoDetectCategory()"
+                                   class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-xs sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-700 text-xs mb-1 font-semibold">Plat Nomor Kendaraan</label>
+                            <input type="text" id="input-car-plate" placeholder="misal: L 1234 ABC" 
+                                   class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-xs sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none uppercase">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-700 text-xs mb-1 font-semibold">Kategori Tarif Bagi Order ASPERDA <span class="text-rose-500">*</span></label>
+                        <select id="input-car-category" required onchange="calculateFee()" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 font-medium text-xs sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <option value="REGULAR">Regular (Avanza, Calya, Innova Reborn, dll) - Rp 5.000/hari</option>
+                            <option value="MEDIUM">Medium / SUV / Microbus (Zenix Q, Fortuner, Pajero, Hiace Premio) - Rp 10.000/hari</option>
+                            <option value="LUXURY">Luxury / Mewah (Alphard, Vellfire, Mercy, BMW) - Rp 50.000/hari</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Tanggal Mulai <span class="text-rose-500">*</span></label>
+                        <input type="date" id="input-start-date" required onchange="calculateFee()" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-2.5 text-slate-800 focus:ring-2 focus:ring-emerald-500">
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Tanggal Selesai <span class="text-rose-500">*</span></label>
+                        <input type="date" id="input-end-date" required onchange="calculateFee()" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-2.5 text-slate-800 focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-3.5 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-emerald-800 font-semibold">Rincian Perhitungan Fee Bagor:</p>
+                        <p class="text-xs text-slate-600" id="calculation-breakdown-text">1 Hari x Rp 5.000 = Rp 5.000</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] text-emerald-700 font-bold uppercase">Total Tagihan Kas</p>
+                        <p class="text-lg font-black text-emerald-700" id="calculation-total-amount">Rp 5.000</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Status Pembayaran Kas Bagor</label>
+                        <select id="input-payment-status" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-2.5 font-semibold text-slate-800">
+                            <option value="PENDING" class="text-amber-600 font-bold">Belum Bayar (Pending)</option>
+                            <option value="LUNAS" class="text-emerald-600 font-bold">Sudah Lunas</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Catatan Tambahan (Opsional)</label>
+                        <input type="text" id="input-notes" placeholder="misal: Lepas Kunci / All In Driver" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-2.5 text-slate-800">
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2">
+                    <label class="block font-semibold text-slate-700 text-xs flex items-center justify-between">
+                        <span class="flex items-center space-x-1">
+                            <i class="fa-solid fa-receipt text-emerald-600"></i>
+                            <span>Upload Bukti Bayar / Transfer Kas (Opsional)</span>
+                        </span>
+                        <span class="text-[10px] text-slate-500 font-normal">Foto / Screenshot (JPG, PNG)</span>
+                    </label>
+                    <input type="file" id="input-payment-proof" accept="image/*" onchange="handleProofImageUpload(event)"
+                           class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 transition-all cursor-pointer">
+                    
+                    <div id="proof-preview-container" class="hidden flex items-center space-x-3 pt-2 border-t border-slate-200">
+                        <img id="proof-preview-img" src="" alt="Bukti Bayar Preview" class="w-16 h-16 object-cover rounded-xl border border-slate-300 shadow-sm">
+                        <div class="text-xs">
+                            <p class="font-bold text-emerald-700 flex items-center space-x-1">
+                                <i class="fa-solid fa-check-circle"></i>
+                                <span>Bukti bayar terlampir</span>
+                            </p>
+                            <button type="button" onclick="clearProofImage()" class="text-rose-600 hover:underline text-[11px] font-semibold mt-1">
+                                Hapus Bukti Foto
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-200 flex items-center justify-end space-x-3">
+                    <button type="button" onclick="closeModal('modal-order')" class="px-4 py-2 text-slate-500 font-semibold hover:bg-slate-100 rounded-2xl transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit" id="btn-save-order" class="px-6 py-2.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold rounded-2xl shadow-md transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Simpan Transaksi</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal WhatsApp Receipt -->
+    <div id="modal-receipt" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white border border-slate-200 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col text-slate-800">
+            <div class="p-4 bg-emerald-700 text-white flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-brands fa-whatsapp text-2xl"></i>
+                    <h3 class="font-bold text-base">Kwitansi / Form WhatsApp Bagi Order</h3>
+                </div>
+                <button onclick="closeModal('modal-receipt')" class="text-emerald-200 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <div class="p-5 space-y-4">
+                <p class="text-xs text-slate-600">Salin format pesan di bawah ini untuk dikirimkan ke grup WhatsApp ASPERDA atau Bendahara Organisasi:</p>
+
+                <textarea id="receipt-text-area" rows="11" readonly 
+                          class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 font-mono text-xs text-slate-800 leading-relaxed focus:outline-none custom-scrollbar">
+                </textarea>
+
+                <div class="flex items-center justify-between pt-2">
+                    <button onclick="copyReceiptText()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-bold flex items-center space-x-2 shadow-md">
+                        <i class="fa-solid fa-copy"></i>
+                        <span id="copy-btn-label">Salin Teks WA</span>
+                    </button>
+                    <button onclick="closeModal('modal-receipt')" class="px-4 py-2 border border-slate-300 text-slate-600 rounded-2xl text-xs font-semibold hover:bg-slate-100">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Member -->
+    <div id="modal-member" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white border border-slate-200 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden text-slate-800">
+            <div class="p-4 bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white flex items-center justify-between">
+                <h3 class="font-bold text-base flex items-center space-x-2">
+                    <i class="fa-solid fa-id-card text-emerald-300"></i>
+                    <span>Tambah Anggota ASPERDA</span>
+                </h3>
+                <button onclick="closeModal('modal-member')" class="text-slate-300 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <form id="form-member" onsubmit="handleSaveMember(event)" class="p-5 space-y-3 text-xs sm:text-sm">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Nama Usaha Rental <span class="text-rose-500">*</span></label>
+                    <input type="text" id="member-name" required placeholder="misal: Berkah Jaya Trans Surabaya" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-2.5 text-slate-800">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Nama Pemilik / PIC</label>
+                    <input type="text" id="member-owner" placeholder="misal: H. Ahmad Fauzi" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-2.5 text-slate-800">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Nomor WhatsApp / HP</label>
+                    <input type="text" id="member-phone" placeholder="misal: 081234567890" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-2.5 text-slate-800">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Kota / Wilayah Operasional</label>
+                    <input type="text" id="member-city" placeholder="misal: Surabaya / Sidoarjo" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-2.5 text-slate-800">
+                </div>
+
+                <div class="pt-3 border-t border-slate-200 flex items-center justify-end space-x-2">
+                    <button type="button" onclick="closeModal('modal-member')" class="px-4 py-2 text-slate-500 hover:bg-slate-100 rounded-2xl">Batal</button>
+                    <button type="submit" class="px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-2xl shadow-md">Simpan Anggota</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal View Bukti Bayar Foto -->
+    <div id="modal-view-proof" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white border border-slate-200 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col text-slate-800">
+            <div class="p-4 bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white flex items-center justify-between">
+                <h3 class="font-bold text-base flex items-center space-x-2">
+                    <i class="fa-solid fa-receipt text-emerald-300"></i>
+                    <span>Bukti Pembayaran Kas Bagor</span>
+                </h3>
+                <button onclick="closeModal('modal-view-proof')" class="text-slate-300 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-5 flex flex-col items-center space-y-3">
+                <img id="view-proof-image" src="" alt="Bukti Pembayaran" class="max-h-[60vh] w-auto object-contain rounded-2xl border border-slate-200 shadow-md">
+                <p id="view-proof-info" class="text-xs text-slate-600 font-medium text-center"></p>
+                <button onclick="closeModal('modal-view-proof')" class="w-full py-2.5 bg-slate-100 text-slate-800 rounded-2xl text-xs font-bold hover:bg-slate-200 transition-colors">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            signInWithCustomToken, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            doc, 
+            addDoc, 
+            updateDoc, 
+            deleteDoc, 
+            onSnapshot 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'bagor-asperda-default';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyDemoKeyForBagorAsperdaApp12345",
+            authDomain: "bagor-asperda.firebaseapp.com",
+            projectId: "bagor-asperda",
+            storageBucket: "bagor-asperda.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:bagorasperda"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let ordersData = [];
+        let membersData = [];
+        let kasCategoryChart = null;
+        let kasMonthlyChart = null;
+        let uploadedProofBase64 = "";
+
+        const RATE_REGULAR = 5000;
+        const RATE_MEDIUM = 10000;
+        const RATE_LUXURY = 50000;
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            initDates();
+            
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.warn("Auth fallback trigger:", err);
+            }
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    updateOnlineBadge(true);
+                    setupFirestoreSubscriptions();
+                } else {
+                    updateOnlineBadge(false);
+                }
+            });
+
+            initMonthlyChart();
+            initKasChart();
+        });
+
+        function updateOnlineBadge(isOnline) {
+            const badge = document.getElementById('db-status-badge');
+            const text = document.getElementById('db-status-text');
+            if (!badge || !text) return;
+            if (isOnline) {
+                badge.className = "flex items-center space-x-2 bg-emerald-900/60 text-emerald-200 px-3 py-1 rounded-full text-xs font-medium border border-emerald-500/30";
+                text.innerText = "Online Cloud";
+            } else {
+                badge.className = "flex items-center space-x-2 bg-rose-900/60 text-rose-200 px-3 py-1 rounded-full text-xs font-medium border border-rose-500/30";
+                text.innerText = "Mode Offline";
+            }
+        }
+
+        window.handleProofImageUpload = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                showToast("Ukuran foto maksimal 5MB!", "error");
+                event.target.value = "";
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    const maxDim = 800;
+
+                    if (width > height && width > maxDim) {
+                        height = Math.round((height * maxDim) / width);
+                        width = maxDim;
+                    } else if (height > maxDim) {
+                        width = Math.round((width * maxDim) / height);
+                        height = maxDim;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    uploadedProofBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+                    document.getElementById('proof-preview-img').src = uploadedProofBase64;
+                    document.getElementById('proof-preview-container').classList.remove('hidden');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.clearProofImage = function() {
+            uploadedProofBase64 = "";
+            const fileInput = document.getElementById('input-payment-proof');
+            if (fileInput) fileInput.value = "";
+            const previewContainer = document.getElementById('proof-preview-container');
+            if (previewContainer) previewContainer.classList.add('hidden');
+        };
+
+        window.viewPaymentProof = function(orderId) {
+            const order = ordersData.find(o => o.id === orderId);
+            if (!order || !order.paymentProof) {
+                showToast("Bukti pembayaran tidak ditemukan.", "error");
+                return;
+            }
+
+            document.getElementById('view-proof-image').src = order.paymentProof;
+            document.getElementById('view-proof-info').innerText = `Order ID: BAGOR-${order.id.substring(0,6).toUpperCase()} | ${order.carName} (${order.carPlate || '-'}) | ${order.rentalB}`;
+            openModal('modal-view-proof');
+        };
+
+        function setupFirestoreSubscriptions() {
+            if (!currentUser) return;
+
+            const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'bagor_orders');
+            onSnapshot(ordersRef, (snapshot) => {
+                ordersData = [];
+                snapshot.forEach(docSnap => {
+                    ordersData.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                ordersData.sort((a, b) => new Date(b.createdAt || b.startDate) - new Date(a.createdAt || a.startDate));
+                
+                renderOrdersTable();
+                renderKasDashboard();
+                updateLeaderboard();
+            }, (error) => {
+                console.error("Orders sync error:", error);
+                showToast("Gagal menyelaraskan data order: " + error.message, "error");
+            });
+
+            const membersRef = collection(db, 'artifacts', appId, 'public', 'data', 'asperda_members');
+            onSnapshot(membersRef, (snapshot) => {
+                membersData = [];
+                snapshot.forEach(docSnap => {
+                    membersData.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                if (membersData.length === 0) {
+                    initDefaultMembers();
+                } else {
+                    renderMembersGrid();
+                    populateRentalDropdowns();
+                }
+            }, (error) => {
+                console.error("Members sync error:", error);
+            });
+        }
+
+        async function initDefaultMembers() {
+            if (!currentUser) return;
+            const defaultList = [
+                { name: "Avanza Rent Surabaya", owner: "H. Bambang", phone: "081234567890", city: "Surabaya" },
+                { name: "Berkah Jaya Trans", owner: "Iwan Setiawan", phone: "081987654321", city: "Sidoarjo" },
+                { name: "Garuda Rentcar VIP", owner: "Rudi Hartono", phone: "081333444555", city: "Surabaya" },
+                { name: "Pelangi Rent Car", owner: "Hj. Ratna", phone: "085711223344", city: "Gresik" },
+                { name: "Mitra Mandiri Autorent", owner: "Denny", phone: "08122334455", city: "Malang" }
+            ];
+
+            const membersRef = collection(db, 'artifacts', appId, 'public', 'data', 'asperda_members');
+            for (const item of defaultList) {
+                await addDoc(membersRef, { ...item, createdAt: new Date().toISOString() });
+            }
+        }
+
+        window.seedSampleData = async function() {
+            if (!currentUser) {
+                showToast("Sistem belum siap. Coba lagi.", "error");
+                return;
+            }
+
+            const currentYear = new Date().getFullYear();
+            const sampleOrders = [
+                {
+                    rentalA: "Avanza Rent Surabaya",
+                    rentalB: "Berkah Jaya Trans",
+                    carName: "Toyota Innova Reborn",
+                    carPlate: "L 1829 BC",
+                    category: "REGULAR",
+                    startDate: `${currentYear}-01-10`,
+                    endDate: `${currentYear}-01-12`,
+                    days: 3,
+                    ratePerDay: 5000,
+                    totalFee: 15000,
+                    paymentStatus: "LUNAS",
+                    paymentProof: "",
+                    notes: "Lepas Kunci",
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    rentalA: "Garuda Rentcar VIP",
+                    rentalB: "Pelangi Rent Car",
+                    carName: "Innova Zenix Q Hybrid",
+                    carPlate: "W 1092 XX",
+                    category: "MEDIUM",
+                    startDate: `${currentYear}-02-05`,
+                    endDate: `${currentYear}-02-08`,
+                    days: 4,
+                    ratePerDay: 10000,
+                    totalFee: 40000,
+                    paymentStatus: "LUNAS",
+                    paymentProof: "",
+                    notes: "Unit Baru Zenix Q",
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    rentalA: "Mitra Mandiri Autorent",
+                    rentalB: "Garuda Rentcar VIP",
+                    carName: "Toyota Alphard HEV",
+                    carPlate: "L 1 VIP",
+                    category: "LUXURY",
+                    startDate: `${currentYear}-02-20`,
+                    endDate: `${currentYear}-02-23`,
+                    days: 4,
+                    ratePerDay: 50000,
+                    totalFee: 200000,
+                    paymentStatus: "PENDING",
+                    paymentProof: "",
+                    notes: "Tamu VVIP Pemprov",
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    rentalA: "Avanza Rent Surabaya",
+                    rentalB: "Garuda Rentcar VIP",
+                    carName: "Toyota Fortuner GR",
+                    carPlate: "L 888 GR",
+                    category: "MEDIUM",
+                    startDate: `${currentYear}-03-01`,
+                    endDate: `${currentYear}-03-03`,
+                    days: 3,
+                    ratePerDay: 10000,
+                    totalFee: 30000,
+                    paymentStatus: "LUNAS",
+                    paymentProof: "",
+                    notes: "Perjalanan Luar Kota",
+                    createdAt: new Date().toISOString()
+                }
+            ];
+
+            const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'bagor_orders');
+            for (const order of sampleOrders) {
+                await addDoc(ordersRef, order);
+            }
+
+            showToast("Contoh data demo bulanan berhasil dimasukkan!", "success");
+        };
+
+        function renderOrdersTable() {
+            const tbody = document.getElementById('orders-table-body');
+            if (!tbody) return;
+
+            const searchVal = document.getElementById('filter-search').value.toLowerCase();
+            const statusFilter = document.getElementById('filter-status').value;
+            const categoryFilter = document.getElementById('filter-category').value;
+
+            const filtered = ordersData.filter(item => {
+                const matchSearch = (
+                    (item.rentalA || '').toLowerCase().includes(searchVal) ||
+                    (item.rentalB || '').toLowerCase().includes(searchVal) ||
+                    (item.carName || '').toLowerCase().includes(searchVal) ||
+                    (item.carPlate || '').toLowerCase().includes(searchVal)
+                );
+                const matchStatus = (statusFilter === 'ALL' || item.paymentStatus === statusFilter);
+                const matchCategory = (categoryFilter === 'ALL' || item.category === categoryFilter);
+
+                return matchSearch && matchStatus && matchCategory;
+            });
+
+            document.getElementById('filtered-count-text').innerText = filtered.length;
+            document.getElementById('total-count-text').innerText = ordersData.length;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="p-8 text-center text-slate-400">
+                            <i class="fa-solid fa-folder-open text-3xl mb-2 text-slate-300"></i>
+                            <p class="text-sm font-semibold text-slate-600">Tidak ada transaksi Bagi Order ditemukan</p>
+                            <p class="text-xs text-slate-400 mt-1">Gunakan tombol "+" di bawah untuk menambah data.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(order => {
+                const categoryBadge = getCategoryBadgeHTML(order.category);
+                const statusBadge = order.paymentStatus === 'LUNAS' 
+                    ? `<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-bold px-2.5 py-1 rounded-full inline-flex items-center space-x-1"><i class="fa-solid fa-check-circle"></i><span>Lunas</span></span>`
+                    : `<span class="bg-amber-100 text-amber-800 border border-amber-300 text-xs font-bold px-2.5 py-1 rounded-full inline-flex items-center space-x-1"><i class="fa-solid fa-clock"></i><span>Belum Bayar</span></span>`;
+
+                const proofButton = order.paymentProof ? `
+                    <button onclick="viewPaymentProof('${order.id}')" title="Lihat Bukti Bayar Foto" class="mt-1 bg-purple-100 text-purple-800 hover:bg-purple-200 border border-purple-300 text-[10px] font-bold px-2 py-0.5 rounded-lg flex items-center space-x-1">
+                        <i class="fa-solid fa-image"></i>
+                        <span>Bukti Bayar</span>
+                    </button>
+                ` : '';
+
+                return `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="p-4">
+                            <div class="font-bold text-slate-800">${formatDateDisplay(order.startDate)}</div>
+                            <div class="text-[11px] text-slate-400 font-mono">Ref: ${order.id.substring(0, 6).toUpperCase()}</div>
+                        </td>
+                        <td class="p-4">
+                            <div class="text-xs">
+                                <span class="text-slate-500">Pemilik Order:</span> 
+                                <strong class="text-slate-800">${escapeHtml(order.rentalA)}</strong>
+                            </div>
+                            <div class="text-xs mt-1">
+                                <span class="text-slate-500">Penerima Order:</span> 
+                                <strong class="text-emerald-700 font-bold">${escapeHtml(order.rentalB)}</strong>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <div class="font-bold text-slate-800 flex items-center space-x-1">
+                                <span>${escapeHtml(order.carName)}</span>
+                            </div>
+                            ${order.carPlate ? `<span class="bg-slate-100 text-slate-600 text-[10px] font-mono px-2 py-0.5 rounded-md border border-slate-200">${escapeHtml(order.carPlate)}</span>` : ''}
+                        </td>
+                        <td class="p-4">
+                            <div class="font-semibold text-slate-700">${order.days || 1} Hari</div>
+                            <div class="text-xs text-slate-400">${formatDateDisplay(order.startDate)} s/d ${formatDateDisplay(order.endDate)}</div>
+                            <div class="mt-1">${categoryBadge}</div>
+                        </td>
+                        <td class="p-4">
+                            <div class="font-black text-emerald-700 text-base">${formatRupiah(order.totalFee)}</div>
+                            <div class="text-[10px] text-slate-400">@ ${formatRupiah(order.ratePerDay)}/hr</div>
+                        </td>
+                        <td class="p-4 text-center">
+                            <div class="flex flex-col items-center">
+                                ${statusBadge}
+                                ${proofButton}
+                            </div>
+                        </td>
+                        <td class="p-4 text-right">
+                            <div class="flex items-center justify-end space-x-1.5">
+                                ${order.paymentStatus === 'PENDING' ? `
+                                    <button onclick="togglePaymentStatus('${order.id}', 'LUNAS')" title="Tandai Sudah Lunas" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center space-x-1">
+                                        <i class="fa-solid fa-check"></i>
+                                        <span class="hidden sm:inline">Lunas</span>
+                                    </button>
+                                ` : `
+                                    <button onclick="togglePaymentStatus('${order.id}', 'PENDING')" title="Ubah ke Belum Lunas" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-colors">
+                                        <i class="fa-solid fa-arrow-rotate-left"></i>
+                                    </button>
+                                `}
+
+                                <button onclick="openReceiptModal('${order.id}')" title="Kwitansi / WA Form" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-colors">
+                                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                                </button>
+
+                                <button onclick="deleteOrder('${order.id}')" title="Hapus Order" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-xl transition-colors">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderKasDashboard() {
+            let totalOrders = ordersData.length;
+            let totalDays = 0;
+            let paidAmount = 0;
+            let paidCount = 0;
+            let pendingAmount = 0;
+            let pendingCount = 0;
+
+            ordersData.forEach(o => {
+                totalDays += (parseInt(o.days) || 1);
+                if (o.paymentStatus === 'LUNAS') {
+                    paidAmount += (parseInt(o.totalFee) || 0);
+                    paidCount++;
+                } else {
+                    pendingAmount += (parseInt(o.totalFee) || 0);
+                    pendingCount++;
+                }
+            });
+
+            const totalKas = paidAmount + pendingAmount;
+
+            document.getElementById('stat-total-orders').innerText = totalOrders;
+            document.getElementById('stat-total-days').innerText = totalDays;
+            document.getElementById('stat-paid-amount').innerText = formatRupiah(paidAmount);
+            document.getElementById('stat-paid-count').innerText = paidCount;
+            document.getElementById('stat-pending-amount').innerText = formatRupiah(pendingAmount);
+            document.getElementById('stat-pending-count').innerText = pendingCount;
+            document.getElementById('stat-total-kas').innerText = formatRupiah(totalKas);
+
+            const pendingTbody = document.getElementById('pending-kas-table-body');
+            const pendingOrders = ordersData.filter(o => o.paymentStatus === 'PENDING');
+
+            if (pendingOrders.length === 0) {
+                pendingTbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="p-4 text-center text-emerald-700 font-medium text-xs">
+                            <i class="fa-solid fa-circle-check mr-1"></i> Semua tagihan kas Bagor telah LUNAS!
+                        </td>
+                    </tr>
+                `;
+            } else {
+                pendingTbody.innerHTML = pendingOrders.map(o => `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-bold text-emerald-700">${escapeHtml(o.rentalB)}</td>
+                        <td class="p-3 text-slate-700">${escapeHtml(o.rentalA)}</td>
+                        <td class="p-3 font-medium text-slate-800">${escapeHtml(o.carName)} (${o.days} hr)</td>
+                        <td class="p-3 text-slate-500">${formatDateDisplay(o.startDate)}</td>
+                        <td class="p-3 font-black text-amber-600">${formatRupiah(o.totalFee)}</td>
+                        <td class="p-3 text-right">
+                            <button onclick="togglePaymentStatus('${o.id}', 'LUNAS')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-1 rounded-xl font-bold shadow-sm">
+                                Lunaskan
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            updateChartData();
+            updateMonthlyChartData();
+        }
+
+        function renderMembersGrid() {
+            const grid = document.getElementById('members-grid');
+            if (!grid) return;
+
+            if (membersData.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-center text-slate-400 py-8">Belum ada data anggota rental.</p>`;
+                return;
+            }
+
+            grid.innerHTML = membersData.map(m => {
+                const totalGiven = ordersData.filter(o => o.rentalB === m.name).length;
+                const totalRequested = ordersData.filter(o => o.rentalA === m.name).length;
+
+                return `
+                    <div class="glass-card p-5 rounded-3xl shadow-sm border border-slate-200 flex flex-col justify-between hover:border-emerald-300 transition-all">
+                        <div>
+                            <div class="flex items-start justify-between">
+                                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 text-white flex items-center justify-center font-black text-lg shadow-sm">
+                                    <i class="fa-solid fa-car"></i>
+                                </div>
+                                <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase border border-slate-200">
+                                    ${escapeHtml(m.city || 'Anggota')}
+                                </span>
+                            </div>
+
+                            <h4 class="font-bold text-slate-800 text-base mt-3">${escapeHtml(m.name)}</h4>
+                            <p class="text-xs text-slate-500 mt-0.5 flex items-center space-x-1">
+                                <i class="fa-solid fa-user text-slate-400"></i>
+                                <span>${escapeHtml(m.owner || '-')}</span>
+                            </p>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-slate-100 space-y-2">
+                            <div class="flex justify-between text-xs text-slate-600">
+                                <span>Penerima Order:</span>
+                                <strong class="text-emerald-700">${totalGiven} Order</strong>
+                            </div>
+                            <div class="flex justify-between text-xs text-slate-600">
+                                <span>Pemilik Order:</span>
+                                <strong class="text-slate-800">${totalRequested} Order</strong>
+                            </div>
+
+                            ${m.phone ? `
+                                <a href="https://wa.me/${formatPhoneForWA(m.phone)}" target="_blank" class="mt-2 w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs py-2 rounded-2xl flex items-center justify-center space-x-1.5 transition-colors">
+                                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                                    <span>Hubungi WA</span>
+                                </a>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function populateRentalDropdowns() {
+            const selectA = document.getElementById('input-rental-a');
+            const selectB = document.getElementById('input-rental-b');
+            if (!selectA || !selectB) return;
+
+            const optionsHTML = membersData.map(m => `<option value="${escapeHtml(m.name)}">${escapeHtml(m.name)} (${escapeHtml(m.city || 'Surabaya')})</option>`).join('');
+
+            selectA.innerHTML = '<option value="">-- Pilih Pemilik Order --</option>' + optionsHTML;
+            selectB.innerHTML = '<option value="">-- Pilih Penerima Order --</option>' + optionsHTML;
+        }
+
+        function updateLeaderboard() {
+            const container = document.getElementById('top-providers-list');
+            if (!container) return;
+
+            const counts = {};
+            ordersData.forEach(o => {
+                if (o.rentalB) {
+                    counts[o.rentalB] = (counts[o.rentalB] || 0) + 1;
+                }
+            });
+
+            const sorted = Object.keys(counts).sort((a,b) => counts[b] - counts[a]);
+
+            if (sorted.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic">Belum ada data transaksi Bagi Order.</p>`;
+                return;
+            }
+
+            container.innerHTML = sorted.slice(0, 5).map((name, idx) => `
+                <div class="flex items-center justify-between text-xs p-2.5 bg-slate-50 rounded-2xl border border-slate-200">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-5 h-5 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-600 text-white font-black flex items-center justify-center text-[10px]">${idx + 1}</span>
+                        <span class="font-semibold text-slate-800">${escapeHtml(name)}</span>
+                    </div>
+                    <span class="font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-lg border border-emerald-200">${counts[name]} Job Unit</span>
+                </div>
+            `).join('');
+        }
+
+        function initMonthlyChart() {
+            const ctx = document.getElementById('kasMonthlyChart').getContext('2d');
+            kasMonthlyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'],
+                    datasets: [
+                        {
+                            label: 'Kas Lunas (Rp)',
+                            data: new Array(12).fill(0),
+                            backgroundColor: 'rgba(16, 185, 129, 0.85)',
+                            borderRadius: 8
+                        },
+                        {
+                            label: 'Tagihan Pending (Rp)',
+                            data: new Array(12).fill(0),
+                            backgroundColor: 'rgba(245, 158, 11, 0.85)',
+                            borderRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: { font: { family: 'Plus Jakarta Sans', size: 11 } }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#64748b' },
+                            grid: { display: false }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#64748b',
+                                callback: function(value) { return 'Rp ' + value.toLocaleString('id-ID'); }
+                            },
+                            grid: { color: 'rgba(226, 232, 240, 0.8)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        window.updateMonthlyChartData = function() {
+            if (!kasMonthlyChart) return;
+            const selectedYear = parseInt(document.getElementById('chart-year-select')?.value) || new Date().getFullYear();
+
+            const monthlyLunas = new Array(12).fill(0);
+            const monthlyPending = new Array(12).fill(0);
+
+            ordersData.forEach(o => {
+                if (!o.startDate) return;
+                const d = new Date(o.startDate);
+                if (d.getFullYear() === selectedYear) {
+                    const m = d.getMonth();
+                    const fee = parseInt(o.totalFee) || 0;
+                    if (o.paymentStatus === 'LUNAS') {
+                        monthlyLunas[m] += fee;
+                    } else {
+                        monthlyPending[m] += fee;
+                    }
+                }
+            });
+
+            kasMonthlyChart.data.datasets[0].data = monthlyLunas;
+            kasMonthlyChart.data.datasets[1].data = monthlyPending;
+            kasMonthlyChart.update();
+
+            // Calculate current month statistics
+            const currentMonth = new Date().getMonth();
+            const currentMonthLunas = monthlyLunas[currentMonth];
+            const currentMonthPending = monthlyPending[currentMonth];
+            const currentMonthTotal = currentMonthLunas + currentMonthPending;
+
+            const thisMonthValElem = document.getElementById('stat-this-month-val');
+            if (thisMonthValElem) thisMonthValElem.innerText = formatRupiah(currentMonthTotal);
+
+            const thisMonthPaidElem = document.getElementById('stat-this-month-paid');
+            if (thisMonthPaidElem) thisMonthPaidElem.innerText = formatRupiah(currentMonthLunas);
+
+            const thisMonthPendingElem = document.getElementById('stat-this-month-pending');
+            if (thisMonthPendingElem) thisMonthPendingElem.innerText = formatRupiah(currentMonthPending);
+        };
+
+        function initKasChart() {
+            const ctx = document.getElementById('kasCategoryChart').getContext('2d');
+            kasCategoryChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Regular (Rp 5k)', 'Medium / SUV (Rp 10k)', 'Luxury (Rp 50k)'],
+                    datasets: [{
+                        label: 'Total Kas Terkumpul (Rp)',
+                        data: [0, 0, 0],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.85)',
+                            'rgba(13, 148, 136, 0.85)',
+                            'rgba(147, 51, 234, 0.85)'
+                        ],
+                        borderRadius: 12
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#64748b' },
+                            grid: { display: false }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#64748b',
+                                callback: function(value) { return 'Rp ' + value.toLocaleString('id-ID'); }
+                            },
+                            grid: { color: 'rgba(226, 232, 240, 0.8)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChartData() {
+            if (!kasCategoryChart) return;
+
+            let regFee = 0, medFee = 0, luxFee = 0;
+            ordersData.forEach(o => {
+                const fee = parseInt(o.totalFee) || 0;
+                if (o.category === 'REGULAR') regFee += fee;
+                else if (o.category === 'MEDIUM') medFee += fee;
+                else if (o.category === 'LUXURY') luxFee += fee;
+            });
+
+            kasCategoryChart.data.datasets[0].data = [regFee, medFee, luxFee];
+            kasCategoryChart.update();
+        }
+
+        window.autoDetectCategory = function() {
+            const carName = document.getElementById('input-car-name').value.toLowerCase();
+            const categorySelect = document.getElementById('input-car-category');
+
+            if (!carName || !categorySelect) return;
+
+            if (carName.includes('alphard') || carName.includes('vellfire') || carName.includes('mercy') || carName.includes('bmw') || carName.includes('camry') || carName.includes('mewah')) {
+                categorySelect.value = 'LUXURY';
+            } else if (carName.includes('zenix') || carName.includes('fortuner') || carName.includes('pajero') || carName.includes('hiace') || carName.includes('premio') || carName.includes('elf') || carName.includes('venturer')) {
+                categorySelect.value = 'MEDIUM';
+            } else {
+                categorySelect.value = 'REGULAR';
+            }
+
+            calculateFee();
+        };
+
+        window.calculateFee = function() {
+            const category = document.getElementById('input-car-category').value;
+            const startDateVal = document.getElementById('input-start-date').value;
+            const endDateVal = document.getElementById('input-end-date').value;
+
+            let rate = RATE_REGULAR;
+            if (category === 'MEDIUM') rate = RATE_MEDIUM;
+            if (category === 'LUXURY') rate = RATE_LUXURY;
+
+            let days = 1;
+            if (startDateVal && endDateVal) {
+                const d1 = new Date(startDateVal);
+                const d2 = new Date(endDateVal);
+                const diffTime = Math.abs(d2 - d1);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                days = Math.max(1, diffDays);
+            }
+
+            const total = days * rate;
+
+            document.getElementById('calculation-breakdown-text').innerText = `${days} Hari x ${formatRupiah(rate)} = ${formatRupiah(total)}`;
+            document.getElementById('calculation-total-amount').innerText = formatRupiah(total);
+        };
+
+        window.handleSaveOrder = async function(e) {
+            e.preventDefault();
+            if (!currentUser) {
+                showToast("Pengguna belum terverifikasi cloud.", "error");
+                return;
+            }
+
+            const rentalA = document.getElementById('input-rental-a').value;
+            const rentalB = document.getElementById('input-rental-b').value;
+            const carName = document.getElementById('input-car-name').value.trim();
+            const carPlate = document.getElementById('input-car-plate').value.trim();
+            const category = document.getElementById('input-car-category').value;
+            const startDate = document.getElementById('input-start-date').value;
+            const endDate = document.getElementById('input-end-date').value;
+            const paymentStatus = document.getElementById('input-payment-status').value;
+            const notes = document.getElementById('input-notes').value.trim();
+
+            if (rentalA === rentalB) {
+                showToast("Pemilik Order dan Penerima Order tidak boleh sama!", "error");
+                return;
+            }
+
+            let ratePerDay = RATE_REGULAR;
+            if (category === 'MEDIUM') ratePerDay = RATE_MEDIUM;
+            if (category === 'LUXURY') ratePerDay = RATE_LUXURY;
+
+            const d1 = new Date(startDate);
+            const d2 = new Date(endDate);
+            const days = Math.max(1, Math.ceil(Math.abs(d2 - d1) / (1000 * 60 * 60 * 24)) + 1);
+            const totalFee = days * ratePerDay;
+
+            const newOrder = {
+                rentalA,
+                rentalB,
+                carName,
+                carPlate,
+                category,
+                startDate,
+                endDate,
+                days,
+                ratePerDay,
+                totalFee,
+                paymentStatus,
+                paymentProof: uploadedProofBase64 || "",
+                notes,
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                const btn = document.getElementById('btn-save-order');
+                btn.disabled = true;
+                btn.innerText = "Menyimpan...";
+
+                const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'bagor_orders');
+                await addDoc(ordersRef, newOrder);
+
+                showToast("Transaksi Bagi Order berhasil disimpan!", "success");
+                closeModal('modal-order');
+                document.getElementById('form-order').reset();
+                clearProofImage();
+                initDates();
+            } catch (err) {
+                showToast("Gagal menyimpan: " + err.message, "error");
+            } finally {
+                const btn = document.getElementById('btn-save-order');
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Simpan Transaksi</span>`;
+            }
+        };
+
+        window.togglePaymentStatus = async function(orderId, newStatus) {
+            if (!currentUser) return;
+            try {
+                const orderRef = doc(db, 'artifacts', appId, 'public', 'data', 'bagor_orders', orderId);
+                await updateDoc(orderRef, { paymentStatus: newStatus });
+                showToast(`Status pembayaran diperbarui ke ${newStatus}`, "success");
+            } catch (err) {
+                showToast("Gagal memperbarui status: " + err.message, "error");
+            }
+        };
+
+        window.deleteOrder = async function(orderId) {
+            if (!currentUser) return;
+            try {
+                const orderRef = doc(db, 'artifacts', appId, 'public', 'data', 'bagor_orders', orderId);
+                await deleteDoc(orderRef);
+                showToast("Transaksi Bagi Order berhasil dihapus.", "success");
+            } catch (err) {
+                showToast("Gagal menghapus: " + err.message, "error");
+            }
+        };
+
+        window.handleSaveMember = async function(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const name = document.getElementById('member-name').value.trim();
+            const owner = document.getElementById('member-owner').value.trim();
+            const phone = document.getElementById('member-phone').value.trim();
+            const city = document.getElementById('member-city').value.trim();
+
+            try {
+                const membersRef = collection(db, 'artifacts', appId, 'public', 'data', 'asperda_members');
+                await addDoc(membersRef, {
+                    name,
+                    owner,
+                    phone,
+                    city,
+                    createdAt: new Date().toISOString()
+                });
+
+                showToast("Anggota rental berhasil ditambahkan!", "success");
+                closeModal('modal-member');
+                document.getElementById('form-member').reset();
+            } catch (err) {
+                showToast("Gagal menambah anggota: " + err.message, "error");
+            }
+        };
+
+        window.openReceiptModal = function(orderId) {
+            const order = ordersData.find(o => o.id === orderId);
+            if (!order) return;
+
+            const proofText = order.paymentProof ? '\n*Bukti Bayar:* Terlampir di Sistem ✅' : '';
+
+            const text = 
+`*BUKTI MONITORING BAGI ORDER (BAGOR) ASPERDA*
+--------------------------------------------
+*Ref Transaksi:* BAGOR-${order.id.substring(0,6).toUpperCase()}
+*Tanggal Input:* ${formatDateDisplay(order.startDate)}
+
+*1. PEMILIK ORDER:* ${order.rentalA}
+*2. PENERIMA ORDER:* ${order.rentalB}
+
+*DETAIL ARMADA:*
+- Unit Mobil: *${order.carName}* ${order.carPlate ? `(${order.carPlate})` : ''}
+- Durasi Sewa: ${order.days} Hari (${formatDateDisplay(order.startDate)} - ${formatDateDisplay(order.endDate)})
+- Kategori Tarif: ${order.category} (@ ${formatRupiah(order.ratePerDay)}/hari)
+
+--------------------------------------------
+*SETORAN KAS BAGOR ASPERDA:* *${formatRupiah(order.totalFee)}*
+*STATUS BAYAR:* *[ ${order.paymentStatus === 'LUNAS' ? 'LUNAS ✅' : 'PENDING / BELUM BAYAR ⏳'} ]*${proofText}
+*(Wajib disetorkan oleh Penerima Order ke Bendahara Asperda)*
+--------------------------------------------
+_Sistem Monitoring Bagor ASPERDA Indonesia_`;
+
+            document.getElementById('receipt-text-area').value = text;
+            openModal('modal-receipt');
+        };
+
+        window.copyReceiptText = function() {
+            const textarea = document.getElementById('receipt-text-area');
+            textarea.select();
+            document.execCommand('copy');
+
+            const btnLabel = document.getElementById('copy-btn-label');
+            btnLabel.innerText = "Tersalin!";
+            setTimeout(() => { btnLabel.innerText = "Salin Teks WA"; }, 2000);
+            showToast("Teks kuitansi WA tersalin ke clipboard!", "success");
+        };
+
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'text-emerald-600');
+                btn.classList.add('text-slate-400');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('nav-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'text-emerald-600');
+                activeBtn.classList.remove('text-slate-400');
+            }
+        };
+
+        window.openModal = function(id) { document.getElementById(id).classList.remove('hidden'); };
+        window.closeModal = function(id) { document.getElementById(id).classList.add('hidden'); };
+
+        window.openNewOrderModal = function() {
+            document.getElementById('form-order').reset();
+            clearProofImage();
+            initDates();
+            populateRentalDropdowns();
+            openModal('modal-order');
+        };
+
+        window.openMemberModal = function() {
+            openModal('modal-member');
+        };
+
+        window.applyFilters = function() {
+            renderOrdersTable();
+        };
+
+        window.resetFilters = function() {
+            document.getElementById('filter-search').value = '';
+            document.getElementById('filter-status').value = 'ALL';
+            document.getElementById('filter-category').value = 'ALL';
+            renderOrdersTable();
+        };
+
+        window.setStatusFilter = function(status) {
+            document.getElementById('filter-status').value = status;
+            applyFilters();
+        };
+
+        function getCategoryBadgeHTML(category) {
+            if (category === 'LUXURY') {
+                return `<span class="bg-purple-100 text-purple-800 border border-purple-200 text-[10px] font-extrabold px-2 py-0.5 rounded-md">LUXURY (50k)</span>`;
+            } else if (category === 'MEDIUM') {
+                return `<span class="bg-teal-100 text-teal-800 border border-teal-200 text-[10px] font-extrabold px-2 py-0.5 rounded-md">MEDIUM/SUV (10k)</span>`;
+            } else {
+                return `<span class="bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-md">REGULAR (5k)</span>`;
+            }
+        }
+
+        function initDates() {
+            const today = new Date().toISOString().split('T')[0];
+            const startDateElem = document.getElementById('input-start-date');
+            const endDateElem = document.getElementById('input-end-date');
+            if (startDateElem) startDateElem.value = today;
+            if (endDateElem) endDateElem.value = today;
+            calculateFee();
+        }
+
+        function formatDateDisplay(dateStr) {
+            if (!dateStr) return '-';
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function formatRupiah(amount) {
+            return 'Rp ' + (parseInt(amount) || 0).toLocaleString('id-ID');
+        }
+
+        function formatPhoneForWA(phone) {
+            let cleaned = phone.replace(/[^0-9]/g, '');
+            if (cleaned.startsWith('0')) cleaned = '62' + cleaned.substring(1);
+            return cleaned;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function showToast(msg, type = "info") {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            
+            let bg = "bg-slate-800 text-white border-slate-700";
+            if (type === "success") bg = "bg-emerald-600 text-white border-emerald-500 shadow-emerald-600/20";
+            if (type === "error") bg = "bg-rose-600 text-white border-rose-500 shadow-rose-600/20";
+
+            toast.className = `${bg} border px-4 py-3 rounded-2xl shadow-xl text-xs sm:text-sm font-semibold flex items-center space-x-2 pointer-events-auto transition-all transform translate-y-2 opacity-0 backdrop-blur-md`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-info"></i><span>${escapeHtml(msg)}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
